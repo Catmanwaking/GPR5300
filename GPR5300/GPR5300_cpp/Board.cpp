@@ -1,29 +1,17 @@
 #include "Board.h"
 #include <stdlib.h>
+#include <vector>
 
 Board::Board(int sidelength)
 {
 	this->sidelength = sidelength;
-
 	fundamentalSolutions = 0;
 	allSolutions = 0;
 
-	possiblePlacements = (int**)malloc(sidelength * sizeof(int*));
-	queens = (int*)malloc(sidelength * sizeof(int));
-
+	possiblePlacements = std::vector<std::vector<int>>(sidelength);
+	queens = std::vector<int>(sidelength);
 	for (int i = 0; i < sidelength; i++)
-	{
-		if (possiblePlacements)
-			possiblePlacements[i] = (int*)malloc(sidelength * sizeof(int));
-	}
-}
-
-Board::~Board()
-{
-	for (int i = 0; i < sidelength; i++)
-		free(possiblePlacements[i]);
-	free(possiblePlacements);
-	free(queens);
+		possiblePlacements[i] = std::vector<int>(sidelength);
 }
 
 void Board::CalculateSolutions()
@@ -68,6 +56,8 @@ void Board::CalculateSolutions()
 	}
 
 	fundamentalSolutions >>= 3;
+	if (allSolutions == 1)
+		fundamentalSolutions = 1;
 }
 
 int Board::GetAllSolutions()

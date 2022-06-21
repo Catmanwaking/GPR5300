@@ -17,7 +17,7 @@ int main()
 	int maxValue;
 	std::cin >> maxValue;
 
-	for (int i = 4; i <= maxValue; i++)
+	for (int i = 1; i <= maxValue; i++)
 	{
 		Board board = Board(i);
 		board.CalculateSolutions();
@@ -25,8 +25,8 @@ int main()
 		int all = board.GetAllSolutions();
 
 		std::cout << "n=" << std::setw(3) << std::setfill(' ') << i
-			<< " => fundamental:" << std::setw(12) << std::setfill(' ') << fundamental
-			<< ", all:" << std::setw(12) << std::setfill(' ') << all
+			<< " => fundamental:" << std::setw(10) << std::setfill(' ') << fundamental
+			<< ", all:" << std::setw(10) << std::setfill(' ') << all
 			<< std::endl;
 	}
 

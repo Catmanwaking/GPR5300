@@ -1,0 +1,9 @@
+﻿  Board.cpp
+D:\GIT\GPR5300\GPR5300\GPR5300_cpp\Board.cpp(65,9): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+D:\GIT\GPR5300\GPR5300\GPR5300_cpp\Board.cpp(70,9): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+  GPR5300_cpp.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 137 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  GPR5300_cpp.vcxproj -> D:\GIT\GPR5300\GPR5300\x64\Release\GPR5300_cpp.exe
