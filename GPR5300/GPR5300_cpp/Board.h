@@ -1,10 +1,11 @@
 #pragma once
+#include <vector>
 class Board
 {
 private:
 	int sidelength;
-	int** possiblePlacements;
-	int* queens;
+	std::vector<std::vector<int>> possiblePlacements;
+	std::vector<int> queens;
 
 	long long fundamentalSolutions;
 	long long allSolutions;
@@ -17,7 +18,6 @@ private:
 
 public:
 	Board(int sidelength);
-	~Board();
 	void CalculateSolutions();
 	int GetAllSolutions();
 	int GetFundamentalSolutions();
