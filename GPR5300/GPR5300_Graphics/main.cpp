@@ -1,5 +1,7 @@
 #include "Window.h"
 #include "D3D.h"
+#include "Mesh.h"
+#include "Camera.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, int nCmdShow)
 {
@@ -17,15 +19,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	if (error != 0)
 		return error;
 
+	Mesh mesh = {};
+	error = mesh.Init(d3d.GetDevice());
+	if (error != 0)
+		return error;
+
+	Camera camera = {};
+	error = camera.Init(d3d.GetDevice(), width, height);
+	if (error != 0)
+		return error;
+
 	while (window.Run())
 	{
+		camera.Update();
+		mesh.Update();
+
 		d3d.BeginScene();
 
-		//draw calls
+		mesh.Render(d3d.GetDevice());
 
 		d3d.EndScene();
 	}
 
+	camera.DeInit();
+	mesh.DeInit();
 	d3d.DeInit();
 	window.DeInit();
 

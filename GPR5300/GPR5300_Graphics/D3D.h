@@ -9,6 +9,8 @@ public:
 	void EndScene();
 	void DeInit();
 
+	IDirect3DDevice9* GetDevice() { return pD3DDevice; }
+
 private:
 	IDirect3DDevice9* pD3DDevice = nullptr;
 };
