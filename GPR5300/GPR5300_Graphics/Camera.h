@@ -1,12 +1,14 @@
 #pragma once
 #include <d3d9.h>
+#include "GameObject.h"
+#include "IUpdateable.h"
 
-class Camera
+class Camera : public GameObject, public IUpdateable
 {
 public:
 	INT Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight);
-	void Update();
-	void DeInit();
+	virtual void Update();
+	virtual void DeInit();
 
 private:
 	D3DMATRIX viewMatrix = {};
