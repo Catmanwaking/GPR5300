@@ -27,8 +27,11 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
 
 void Mesh::Update()
 {
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, XM_PIDIV4);
-	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), rotationMatrix);
+	XMMATRIX fromTransform =
+		XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
+		XMMatrixRotationRollPitchYaw(transform.rotation.x * toRadian, transform.rotation.y * toRadian, transform.rotation.z * toRadian) *
+		XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
+	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), fromTransform);
 }
 
 void Mesh::Render(IDirect3DDevice9* pD3DDevice)

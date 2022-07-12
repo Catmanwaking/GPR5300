@@ -41,23 +41,23 @@ void Scene::DeInit()
 
 INT Scene::AddMesh()
 {
-	Mesh* mesh = new Mesh;
-	INT error = mesh->Init(pD3DDevice);
+	Mesh* pMesh = new Mesh;
+	INT error = pMesh->Init(pD3DDevice);
 	if (error != 0)
 		return error;
-	gameObjects.push_back(mesh);
-	renderables.push_back(dynamic_cast<IRenderable*>(mesh));
-	updateables.push_back(dynamic_cast<IUpdateable*>(mesh));
+	gameObjects.push_back(pMesh);
+	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
+	updateables.push_back(dynamic_cast<IUpdateable*>(pMesh));
 	return 0;
 }
 
 INT Scene::AddCamera(UINT width, UINT height)
 {
-	Camera* camera = new Camera;
-	INT error = camera->Init(pD3DDevice, width, height);
+	Camera* pCamera = new Camera;
+	INT error = pCamera->Init(pD3DDevice, width, height);
 	if (error != 0)
 		return error;
-	gameObjects.push_back(camera);
-	updateables.push_back(dynamic_cast<IUpdateable*>(camera));
+	gameObjects.push_back(pCamera);
+	updateables.push_back(dynamic_cast<IUpdateable*>(pCamera));
 	return 0;
 }
