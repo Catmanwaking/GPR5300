@@ -20,6 +20,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	if (error != 0)
 		return error;
 
+	if (!windowed)
+	{
+		width = d3d.GetWidth();
+		height = d3d.GetHeight();
+	}
+
 	Scene scene = {};
 	error = scene.Init(d3d.GetDevice(), width, height);
 	if (error != 0)
@@ -31,7 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 
 		d3d.BeginScene();
 
-		scene.Render(d3d.GetDevice());
+		scene.Render();
 
 		d3d.EndScene();
 	}

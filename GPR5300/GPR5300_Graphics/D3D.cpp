@@ -22,7 +22,6 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	if (d3dCaps.VertexProcessingCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
 		vertexProcessing = D3DCREATE_HARDWARE_VERTEXPROCESSING;
 
-	D3DDISPLAYMODE mode = {};
 	pD3D->GetAdapterDisplayMode(adapter, &mode);
 
 	D3DPRESENT_PARAMETERS d3dpp = {};
