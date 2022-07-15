@@ -35,13 +35,18 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	d3dpp.FullScreen_RefreshRateInHz = windowed ? 0 : mode.RefreshRate;
+	d3dpp.EnableAutoDepthStencil = TRUE;
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 	
 	hr = pD3D->CreateDevice(adapter, devType, hWnd, vertexProcessing, &d3dpp, &pD3DDevice);
 	if (FAILED(hr))
 		return 24;
 
 	pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	pD3DDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+	pD3DDevice->SetRenderState(D3DRS_COLORVERTEX, FALSE);
 
 	SafeRelease<IDirect3D9>(pD3D);
 
@@ -50,7 +55,7 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 
 void D3D::BeginScene()
 {
-	pD3DDevice->Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(60, 60, 60), 1.0f, 0xffffffff);
+	pD3DDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(60, 60, 60), 1.0f, 0xffffffff);
 
 	pD3DDevice->BeginScene();
 }
