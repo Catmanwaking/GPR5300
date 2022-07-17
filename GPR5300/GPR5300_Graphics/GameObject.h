@@ -1,14 +1,14 @@
 #pragma once
-#include <DirectXMath.h>
-#include <d3d9.h>
+#include <vector>
 #include "Transform.h"
-
-using namespace DirectX;
+#include "Component.h"
 
 class GameObject
 {
 public:
-	virtual void DeInit() {};
+	void DeInit();
+	void AddComponent(Component* c);
+
 	Transform transform {};
-	GameObject(Transform transform) { this->transform = transform; }
+	std::vector<Component*> components = {};
 };

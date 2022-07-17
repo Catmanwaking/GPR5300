@@ -4,6 +4,7 @@
 #include "Utils.h"
 
 using namespace DirectX;
+using namespace Constants;
 
 INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
 {
@@ -17,25 +18,13 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
 	if (error != 0)
 		return error;
 
-	XMMATRIX identityMatrix = XMMatrixIdentity();
-	XMFLOAT4X4 identityFloat4x4 = {};
-	XMStoreFloat4x4(&identityFloat4x4, identityMatrix);
-	transformMatrix = *reinterpret_cast<D3DMATRIX*>(&identityFloat4x4);
-
 	return 0;
-}
-
-void Mesh::Update()
-{
-	XMMATRIX fromTransform =
-		XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
-		XMMatrixRotationRollPitchYaw(transform.rotation.x * toRadian, transform.rotation.y * toRadian, transform.rotation.z * toRadian) *
-		XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
-	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), fromTransform);
 }
 
 void Mesh::Render(IDirect3DDevice9* pD3DDevice)
 {
+	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), pTransform->GetTransformationMatrix());
+
 	pD3DDevice->SetTransform(D3DTS_WORLD, &transformMatrix);
 
 	pD3DDevice->SetFVF(FVF);

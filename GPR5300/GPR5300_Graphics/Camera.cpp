@@ -5,14 +5,7 @@ using namespace DirectX;
 
 INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight)
 {
-    XMMATRIX lookMatrix = XMMatrixLookToLH
-    (
-        XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f),
-        XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
-        XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-    );
-    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&viewMatrix), lookMatrix);
-    pD3DDevice->SetTransform(D3DTS_VIEW, &viewMatrix);
+    this->pD3DDevice = pD3DDevice;
 
     XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovLH
     (
@@ -29,6 +22,14 @@ INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeig
 
 void Camera::Update()
 {
+    XMMATRIX lookMatrix = XMMatrixLookToLH
+    (
+        pTransform->GetPosition(),
+        pTransform->Forward(),
+        pTransform->Up()
+    );
+    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&viewMatrix), lookMatrix);
+    pD3DDevice->SetTransform(D3DTS_VIEW, &viewMatrix);
 }
 
 void Camera::DeInit()

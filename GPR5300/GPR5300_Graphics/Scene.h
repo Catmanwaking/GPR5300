@@ -12,7 +12,7 @@ public:
 	void Update();
 	void Render();
 	void DeInit();
-	INT AddMesh(/*path*/);
+	INT AddMeshes(/*path*/);
 	INT AddCamera(UINT width, UINT height);
 
 private:

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "IUpdateable.h"
 
-class Camera : public GameObject, public IUpdateable
+class Camera : public Component, public IUpdateable
 {
 public:
 	INT Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight);
@@ -11,6 +11,7 @@ public:
 	virtual void DeInit();
 
 private:
+	IDirect3DDevice9* pD3DDevice = nullptr;
 	D3DMATRIX viewMatrix = {};
 	D3DMATRIX projectionMatrix = {};
 };

@@ -1,14 +1,12 @@
 #pragma once
 #include <d3d9.h>
 #include "GameObject.h"
-#include "IUpdateable.h"
 #include "IRenderable.h"
 
-class Mesh : public GameObject, public IUpdateable, public IRenderable
+class Mesh : public Component, public IRenderable
 {
 public:
 	INT Init(IDirect3DDevice9* pD3DDevice);
-	virtual void Update();
 	virtual void Render(IDirect3DDevice9* pD3DDevice);
 	virtual void DeInit();
 
