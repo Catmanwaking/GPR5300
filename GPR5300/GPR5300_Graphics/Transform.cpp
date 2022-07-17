@@ -29,85 +29,95 @@ XMMATRIX Transform::GetTransformationMatrix()
 		XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-XMVECTOR Transform::GetPosition()
+Vector3 Transform::GetPosition()
 {
-	return XMVectorSet(position.x, position.y, position.z, 0.0f);
+	return Vector3(position.x, position.y, position.z);
 }
 
-XMVECTOR Transform::GetRotation()
+Vector3 Transform::GetRotation()
 {
-	return XMVectorSet(rotation.x, rotation.y, rotation.z, 0.0f);
+	return Vector3(rotation.x, rotation.y, rotation.z);
 }
 
-XMVECTOR Transform::GetScale()
+Vector3 Transform::GetScale()
 {
-	return XMVectorSet(scale.x, scale.y, scale.z, 0.0f);
+	return Vector3(scale.x, scale.y, scale.z);
 }
 
-XMVECTOR Transform::Forward()
+Vector3 Transform::Forward()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		cos(rotation.z) * sin(rotation.y),
 		-sin(rotation.z),
-		cos(rotation.z) * cos(rotation.y),
-		0.0f
+		cos(rotation.z) * cos(rotation.y)
 	);
 }
 
-XMVECTOR Transform::Back()
+Vector3 Transform::Back()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		-cos(rotation.z) * sin(rotation.y),
 		sin(rotation.z),
-		-cos(rotation.z) * cos(rotation.y),
-		0.0f
+		-cos(rotation.z) * cos(rotation.y)
 	);
 }
 
-XMVECTOR Transform::Right()
+Vector3 Transform::Right()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		cos(rotation.y),
 		0.0f,
-		-sin(rotation.y),
-		0.0f
+		-sin(rotation.y)
 	);
 }
 
-XMVECTOR Transform::Left()
+Vector3 Transform::Left()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		-cos(rotation.y),
 		0.0f,
-		sin(rotation.y),
-		0.0f
+		sin(rotation.y)
 	);
 }
 
-XMVECTOR Transform::Up()
+Vector3 Transform::Up()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		sin(rotation.z) * sin(rotation.y),
 		cos(rotation.z),
-		sin(rotation.z) * cos(rotation.y),
-		0.0f
+		sin(rotation.z) * cos(rotation.y)
 	);
 }
 
-XMVECTOR Transform::Down()
+Vector3 Transform::Down()
 {
-	return XMVectorSet
+	return Vector3
 	(
 		-sin(rotation.z) * sin(rotation.y),
 		-cos(rotation.z),
-		-sin(rotation.z) * cos(rotation.y),
-		0.0f
+		-sin(rotation.z) * cos(rotation.y)
 	);
+}
+
+Transform Transform::operator*(FLOAT right)
+{
+	Transform left;
+	left.position = this->position * right;
+	left.rotation = this->rotation * right;
+	left.scale = this->scale * right;
+	return left;
+}
+
+void Transform::operator*=(FLOAT right)
+{
+	this->position *= right;
+	this->rotation *= right;
+	this->scale *= right;
 }
 
 Transform Transform::operator+(Transform right)

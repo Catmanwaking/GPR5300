@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "IUpdateable.h"
+#include "Time.h"
 
 class Scene
 {
@@ -12,7 +13,7 @@ public:
 	void Update();
 	void Render();
 	void DeInit();
-	INT AddMeshes(/*path*/);
+	INT AddMeshes();
 	INT AddCamera(UINT width, UINT height);
 
 private:
@@ -20,5 +21,7 @@ private:
 	std::vector<GameObject*> gameObjects = {};
 	std::vector<IRenderable*> renderables = {};
 	std::vector<IUpdateable*> updateables = {};
+
+	Time time = {};
 };
 

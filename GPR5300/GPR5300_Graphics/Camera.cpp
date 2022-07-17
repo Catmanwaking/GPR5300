@@ -24,9 +24,9 @@ void Camera::Update()
 {
     XMMATRIX lookMatrix = XMMatrixLookToLH
     (
-        pTransform->GetPosition(),
-        pTransform->Forward(),
-        pTransform->Up()
+        pTransform->GetPosition().ToXMVector(),
+        pTransform->Forward().ToXMVector(),
+        pTransform->Up().ToXMVector()
     );
     XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&viewMatrix), lookMatrix);
     pD3DDevice->SetTransform(D3DTS_VIEW, &viewMatrix);

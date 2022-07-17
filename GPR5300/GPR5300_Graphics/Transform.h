@@ -13,15 +13,18 @@ public:
 	Transform(Vector3 pos, Vector3 rot, Vector3 sca);
 
 	XMMATRIX GetTransformationMatrix();
-	XMVECTOR GetPosition();
-	XMVECTOR GetRotation();
-	XMVECTOR GetScale();
-	XMVECTOR Forward();
-	XMVECTOR Back();
-	XMVECTOR Right();
-	XMVECTOR Left();
-	XMVECTOR Up();
-	XMVECTOR Down();
+	Vector3 GetPosition();
+	Vector3 GetRotation();
+	Vector3 GetScale();
+	Vector3 Forward();
+	Vector3 Back();
+	Vector3 Right();
+	Vector3 Left();
+	Vector3 Up();
+	Vector3 Down();
+
+	Transform operator *(FLOAT right);
+	void operator *=(FLOAT right);
 
 	Transform operator +(Transform right);
 	void operator +=(Transform right);

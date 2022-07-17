@@ -13,6 +13,8 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 	this->pD3DDevice = pD3DDevice;
 	INT error = 0;
 
+	time = Time();
+	time.Init();
 	if (error = AddMeshes()) return error;
 	if (error = AddCamera(width, height)) return error;
 
@@ -21,6 +23,7 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 
 void Scene::Update()
 {
+	time.Update();
 	for (IUpdateable* updateObj : updateables)
 	{
 		updateObj->Update();
@@ -53,11 +56,11 @@ INT Scene::AddMeshes()
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
 	go->AddComponent(pMesh);
 
-	Mover* pMover = new Mover;
-	error = pMover->Init(Transform(0.0f, 0.0f, 0.0f, 0.12f * toRadian, 0.7f * toRadian, 0.3f * toRadian, 0.0f, 0.0f, 0.0f));
-	if (error) return error;
-	updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
-	go->AddComponent(pMover);
+	//Mover* pMover = new Mover;
+	//error = pMover->Init(Transform(0.0f, 0.0f, 0.0f, 0.12f * toRadian, 0.7f * toRadian, 0.3f * toRadian, 0.0f, 0.0f, 0.0f), &time);
+	//if (error) return error;
+	//updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
+	//go->AddComponent(pMover);
 
 	gameObjects.push_back(go);
 
@@ -70,10 +73,16 @@ INT Scene::AddCamera(UINT width, UINT height)
 
 	Camera* pCamera = new Camera;
 	INT error = pCamera->Init(pD3DDevice, width, height);
-	if (error != 0)
-		return error;
+	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pCamera));
 	go->AddComponent(pCamera);
+
+	Mover* pMover = new Mover;
+	error = pMover->Init(Transform(-2.0f, 0.0f, 0.0f, 0.0f, 90.0f * toRadian, 0.0f, 0.0f, 0.0f, 0.0f), &time);
+	if (error) return error;
+	pMover->SetSpace(Space::Local);
+	updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
+	go->AddComponent(pMover);
 
 	go->transform.position += Vector3(0.0f, 0.0f, -1.0f);
 	gameObjects.push_back(go);

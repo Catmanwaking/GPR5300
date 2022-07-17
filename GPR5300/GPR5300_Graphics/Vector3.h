@@ -16,6 +16,11 @@ public:
 	XMFLOAT3 ToXMFloat() { return XMFLOAT3(x, y, z); }
 	XMVECTOR ToXMVector() { return XMVectorSet(x, y, z, 0.0f); }
 
+	Vector3 operator *(FLOAT right);
+	void operator *=(FLOAT right);
 	Vector3 operator +(Vector3 right);
 	void operator +=(Vector3 right);
+	Vector3 operator -(Vector3 right);
+	void operator -=(Vector3 right);
+	FLOAT operator *(Vector3 right);
 };
