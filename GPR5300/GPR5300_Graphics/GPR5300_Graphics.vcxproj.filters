@@ -87,6 +87,9 @@
     <ClCompile Include="WICTextureLoader9.cpp">
       <Filter>Source Files\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="Rotator.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -136,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="WICTextureLoader9.h">
       <Filter>Header Files\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotator.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

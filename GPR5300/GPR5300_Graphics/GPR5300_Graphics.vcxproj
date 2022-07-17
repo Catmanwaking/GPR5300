@@ -152,6 +152,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mover.cpp" />
+    <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -164,10 +165,12 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Space.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mover.h" />
+    <ClInclude Include="Rotator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />

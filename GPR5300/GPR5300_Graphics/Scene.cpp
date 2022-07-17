@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Mover.h"
+#include "Rotator.h"
 #include "Utils.h"
 
 using namespace Constants;
@@ -15,8 +16,8 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 
 	time = Time();
 	time.Init();
+	if (error = SetupCamera(width, height)) return error;
 	if (error = AddMeshes()) return error;
-	if (error = AddCamera(width, height)) return error;
 
 	return 0;
 }
@@ -50,41 +51,69 @@ INT Scene::AddMeshes()
 {
 	GameObject* go = new GameObject;
 
-	Mesh* pMesh = new Mesh;
-	INT error = pMesh->Init(pD3DDevice);
-	if (error) return error;
-	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
-	go->AddComponent(pMesh);
-
-	//Mover* pMover = new Mover;
-	//error = pMover->Init(Transform(0.0f, 0.0f, 0.0f, 0.12f * toRadian, 0.7f * toRadian, 0.3f * toRadian, 0.0f, 0.0f, 0.0f), &time);
-	//if (error) return error;
-	//updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
-	//go->AddComponent(pMover);
+	AddMesh(go);
+	//AddRotator(go, Vector3(0.12f * toRadian, 0.7f * toRadian, 0.3f * toRadian));
 
 	gameObjects.push_back(go);
 
 	return 0;
 }
 
-INT Scene::AddCamera(UINT width, UINT height)
+INT Scene::AddCamera(GameObject* go, UINT width, UINT height)
 {
-	GameObject* go = new GameObject;
-
 	Camera* pCamera = new Camera;
 	INT error = pCamera->Init(pD3DDevice, width, height);
 	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pCamera));
 	go->AddComponent(pCamera);
 
+	return 0;
+}
+
+INT Scene::AddMesh(GameObject* go)
+{
+	Mesh* pMesh = new Mesh;
+	INT error = pMesh->Init(pD3DDevice);
+	if (error) return error;
+	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
+	go->AddComponent(pMesh);
+
+	return 0;
+}
+
+INT Scene::AddMover(GameObject* go, Vector3 movement)
+{
 	Mover* pMover = new Mover;
-	error = pMover->Init(Transform(-2.0f, 0.0f, 0.0f, 0.0f, 90.0f * toRadian, 0.0f, 0.0f, 0.0f, 0.0f), &time);
+	INT error = pMover->Init(movement, &time);
 	if (error) return error;
 	pMover->SetSpace(Space::Local);
 	updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
 	go->AddComponent(pMover);
 
+	return 0;
+}
+
+INT Scene::AddRotator(GameObject* go, Vector3 rotation)
+{
+	Rotator* pRotator = new Rotator;
+	INT error = pRotator->Init(rotation, &time);
+	if (error) return error;
+	pRotator->SetSpace(Space::Global);
+	updateables.push_back(dynamic_cast<IUpdateable*>(pRotator));
+	go->AddComponent(pRotator);
+
+	return 0;
+}
+
+INT Scene::SetupCamera(UINT width, UINT height)
+{
+	GameObject* go = new GameObject;
+
+	AddCamera(go, width, height);
+	AddMover(go, Vector3(-2.0f, 0.0f, 0.0f));
+	AddRotator(go, Vector3(0.0f, 90.0f * toRadian, 0.0f));
 	go->transform.position += Vector3(0.0f, 0.0f, -1.0f);
+
 	gameObjects.push_back(go);
 
 	return 0;

@@ -13,8 +13,6 @@ public:
 	void Update();
 	void Render();
 	void DeInit();
-	INT AddMeshes();
-	INT AddCamera(UINT width, UINT height);
 
 private:
 	IDirect3DDevice9* pD3DDevice;
@@ -23,5 +21,13 @@ private:
 	std::vector<IUpdateable*> updateables = {};
 
 	Time time = {};
+
+	INT SetupCamera(UINT width, UINT height);
+	INT AddMeshes();
+
+	INT AddCamera(GameObject* go, UINT width, UINT height);
+	INT AddMesh(GameObject* go/*, LPCWSTR path*/);
+	INT AddMover(GameObject* go, Vector3 movement);
+	INT AddRotator(GameObject* go, Vector3 rotation);
 };
 

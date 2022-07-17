@@ -4,20 +4,19 @@
 #include "IUpdateable.h"
 #include "Transform.h"
 #include "Time.h"
-
-enum class Space { Global, Local };
+#include "Space.h"
 
 class Mover : public Component, public IUpdateable
 {
 public:
-	INT Init(Transform movement, Time* pTime);
+	INT Init(Vector3 movement, Time* pTime);
 	virtual void Update();
 	virtual void DeInit();
-	void SetSpace(Space relativeTo) { this->relativeTo = relativeTo; }
+	void SetSpace(Space relativeTo);
 
 private:
-	Transform movement;
+	Vector3 movement = {};
 	Time* pTime = nullptr;
-	Space relativeTo;
+	Space relativeTo = Space::Global;
 };
 
