@@ -21,6 +21,9 @@ INT Material::Init(IDirect3DDevice9* pD3DDevice, LPCTSTR texturePath)
 
 void Material::Render(IDirect3DDevice9* pD3DDevice)
 {
+	if (pTexture == nullptr)
+		return;
+
 	pD3DDevice->SetTexture(0, pTexture);
 	pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 	pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);

@@ -21,8 +21,15 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
 	return 0;
 }
 
+INT Mesh::AddMaterial(IDirect3DDevice9* pD3DDevice, LPCTSTR path)
+{
+	return material.Init(pD3DDevice, path);;
+}
+
 void Mesh::Render(IDirect3DDevice9* pD3DDevice)
 {
+	material.Render(pD3DDevice);
+
 	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), pTransform->GetTransformationMatrix());
 
 	pD3DDevice->SetTransform(D3DTS_WORLD, &transformMatrix);
@@ -61,10 +68,10 @@ INT Mesh::InitVertexBuffer(IDirect3DDevice9* pD3DDevice)
 	if (FAILED(hr))
 		return 32;
 
-	vertices[0] = Vertex(-0.5f,  0.5f, 0.0f, 255,   0,   0);
-	vertices[1] = Vertex( 0.5f,  0.5f, 0.0f,   0, 255,   0);
-	vertices[2] = Vertex( 0.5f, -0.5f, 0.0f, 255,   0, 255);
-	vertices[3] = Vertex(-0.5f, -0.5f, 0.0f,   0,   0, 255);
+	vertices[0] = Vertex(-0.5f,  0.5f, 0.0f, 0.0f, 0.0f);
+	vertices[1] = Vertex( 0.5f,  0.5f, 0.0f, 1.0f, 0.0f);
+	vertices[2] = Vertex( 0.5f, -0.5f, 0.0f, 1.0f, 1.0f);
+	vertices[3] = Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f);
 
 	hr = pVertexBuffer->Unlock();
 	if (FAILED(hr))

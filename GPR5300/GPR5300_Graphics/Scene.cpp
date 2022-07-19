@@ -45,6 +45,7 @@ void Scene::DeInit()
 	{
 		gameObj->DeInit();
 	}
+	time.DeInit();
 }
 
 INT Scene::AddMeshes()
@@ -52,7 +53,7 @@ INT Scene::AddMeshes()
 	GameObject* go = new GameObject;
 
 	AddMesh(go);
-	//AddRotator(go, Vector3(0.12f * toRadian, 0.7f * toRadian, 0.3f * toRadian));
+	AddRotator(go, Vector3(30.0f * toRadian, 0.0f, 0.0f));
 
 	gameObjects.push_back(go);
 
@@ -76,6 +77,9 @@ INT Scene::AddMesh(GameObject* go)
 	INT error = pMesh->Init(pD3DDevice);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
+
+	pMesh->AddMaterial(pD3DDevice, TEXT("Objects/Denser.png")); //TODO generalize
+
 	go->AddComponent(pMesh);
 
 	return 0;
@@ -110,7 +114,7 @@ INT Scene::SetupCamera(UINT width, UINT height)
 	GameObject* go = new GameObject;
 
 	AddCamera(go, width, height);
-	AddMover(go, Vector3(-2.0f, 0.0f, 0.0f));
+	AddMover(go, Vector3(-3.0f, 0.0f, 0.0f));
 	AddRotator(go, Vector3(0.0f, 90.0f * toRadian, 0.0f));
 	go->transform.position += Vector3(0.0f, 0.0f, -1.0f);
 

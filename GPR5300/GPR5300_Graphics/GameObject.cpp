@@ -8,7 +8,7 @@ void GameObject::DeInit()
 		component->DeInit();
 	}
 	components.clear();
-	components;
+	components; //TODO oversight
 }
 
 void GameObject::AddComponent(Component* c)
