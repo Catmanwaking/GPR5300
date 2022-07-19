@@ -54,6 +54,7 @@ INT Scene::AddMeshes()
 
 	AddMesh(go);
 	AddRotator(go, Vector3(30.0f * toRadian, 0.0f, 0.0f));
+	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
 
 	gameObjects.push_back(go);
 
@@ -78,7 +79,7 @@ INT Scene::AddMesh(GameObject* go)
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
 
-	pMesh->AddMaterial(pD3DDevice, TEXT("Objects/Denser.png")); //TODO generalize
+	pMesh->AddMaterial(pD3DDevice, TEXT("Models/Denser.png")); //TODO generalize
 
 	go->AddComponent(pMesh);
 

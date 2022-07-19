@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Utils.h"
+#include "MeshLoader.h"
 
 using namespace DirectX;
 using namespace Constants;
@@ -62,6 +63,8 @@ INT Mesh::InitVertexBuffer(IDirect3DDevice9* pD3DDevice)
 	);
 	if (FAILED(hr))
 		return 30;
+
+	//MeshLoader::LoadFromFile(/**/);
 
 	Vertex* vertices = nullptr;
 	hr = pVertexBuffer->Lock(0, 0, reinterpret_cast<void**>(&vertices), 0);

@@ -1,3 +1,3 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (GPR5300_Graphics.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Scene.cpp
-  GPR5300_Graphics.vcxproj -> E:\GIT\GPR5300\GPR5300\x64\Debug\GPR5300_GraphicsD3D9.exe
+  GPR5300_Graphics.vcxproj -> D:\GIT\GPR5300\GPR5300\x64\Debug\GPR5300_GraphicsD3D9.exe
