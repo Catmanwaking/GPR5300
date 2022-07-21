@@ -15,7 +15,7 @@ INT Window::Init(HINSTANCE hInstance, UINT width, UINT height)
 	wc.hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.lpszClassName = TEXT("Direct3D 9");
+	wc.lpszClassName = TEXT("Direct3D 11");
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
 

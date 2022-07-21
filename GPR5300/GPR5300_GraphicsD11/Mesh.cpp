@@ -1,11 +1,8 @@
-#include <DirectXMath.h>
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Utils.h"
 
-using namespace DirectX;
-
-INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
+INT Mesh::Init(ID3D11Device* pD3DDevice)
 {
 	INT error = 0;
 
@@ -17,10 +14,7 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice)
 	if (error != 0)
 		return error;
 
-	XMMATRIX identityMatrix = XMMatrixIdentity();
-	XMFLOAT4X4 identityFloat4x4 = {};
-	XMStoreFloat4x4(&identityFloat4x4, identityMatrix);
-	transformMatrix = *reinterpret_cast<D3DMATRIX*>(&identityFloat4x4);
+	XMStoreFloat4x4(&transformMatrix, XMMatrixIdentity());
 
 	return 0;
 }
@@ -36,82 +30,71 @@ void Mesh::Update()
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
 	XMMATRIX transform = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 	XMMATRIX scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&transformMatrix), scaleMatrix * rotationMatrix * transform);
+	XMStoreFloat4x4(&transformMatrix, scaleMatrix * rotationMatrix * transform);
 }
 
-void Mesh::Render(IDirect3DDevice9* pD3DDevice)
+void Mesh::Render(ID3D11DeviceContext* pD3DDeviceContext)
 {
-	pD3DDevice->SetTransform(D3DTS_WORLD, &transformMatrix);
-
-	pD3DDevice->SetFVF(FVF);
-	pD3DDevice->SetStreamSource(0, pVertexBuffer, 0, vertexStride);
-	pD3DDevice->SetIndices(pIndexBuffer);
-	pD3DDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount, 0, indexCount / 3);
+	static UINT offset = 0;
+	pD3DDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &vertexStride, &offset);
+	pD3DDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	pD3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pD3DDeviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
 void Mesh::DeInit()
 {
-	SafeRelease<IDirect3DVertexBuffer9>(pVertexBuffer);
-	SafeRelease<IDirect3DIndexBuffer9>(pIndexBuffer);
+	SafeRelease<ID3D11Buffer>(pVertexBuffer);
+	SafeRelease<ID3D11Buffer>(pIndexBuffer);
 }
 
-INT Mesh::InitVertexBuffer(IDirect3DDevice9* pD3DDevice)
+INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 {
 	vertexCount = 4;
 	vertexStride = sizeof(Vertex);
 
-	HRESULT hr = pD3DDevice->CreateVertexBuffer
-	(
-		vertexCount * vertexStride,
-		D3DUSAGE_WRITEONLY,
-		FVF,//D3DFVF
-		D3DPOOL_MANAGED,
-		&pVertexBuffer,
-		nullptr
-	);
-	if (FAILED(hr))
-		return 30;
+	Vertex vertices[] = 
+	{
+		Vertex(-0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f),
+		Vertex(0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f),
+		Vertex(0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f),
+		Vertex(-0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f)
+	};
 
-	Vertex* vertices = nullptr;
-	hr = pVertexBuffer->Lock(0, 0, reinterpret_cast<void**>(&vertices), 0);
-	if (FAILED(hr))
-		return 32;
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.ByteWidth = vertexCount * vertexStride;
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 
-	vertices[0] = Vertex(-0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f);
-	vertices[1] = Vertex( 0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f);
-	vertices[2] = Vertex( 0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f);
-	vertices[3] = Vertex(-0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f);
+	D3D11_SUBRESOURCE_DATA subResourceData = {};
+	subResourceData.pSysMem = vertices;
 
-	hr = pVertexBuffer->Unlock();
-	if (FAILED(hr))
-		return 34;
-
-	vertices = nullptr;
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pVertexBuffer);
+	if (FAILED(hr)) return 30;
 
 	return 0;
 }
 
-INT Mesh::InitIndexBuffer(IDirect3DDevice9* pD3DDevice)
+INT Mesh::InitIndexBuffer(ID3D11Device* pD3DDevice)
 {
 	indexCount = 6;
 
-	HRESULT hr = pD3DDevice->CreateIndexBuffer(indexCount * sizeof(USHORT), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &pIndexBuffer, nullptr);
-	if (FAILED(hr))
-		return 40;
+	USHORT indices[]
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
 
-	USHORT* indices = nullptr;
-	hr = pIndexBuffer->Lock(0, 0, reinterpret_cast<void**>(&indices), 0);
-	if (FAILED(hr))
-		return 42;
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.ByteWidth = indexCount * sizeof(USHORT);
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 
-	indices[0] = 0; indices[1] = 1; indices[2] = 2;
-	indices[3] = 0; indices[4] = 2; indices[5] = 3;
+	D3D11_SUBRESOURCE_DATA subResourceData = {};
+	subResourceData.pSysMem = indices;
 
-	hr = pIndexBuffer->Unlock();
-	if (FAILED(hr))
-		return 44;
-
-	indices = nullptr;
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pIndexBuffer);
+	if (FAILED(hr)) return 32;
 
 	return 0;
 }
