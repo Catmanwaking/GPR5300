@@ -3,12 +3,12 @@
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "Material.h"
+#include "MeshData.h"
 
 class Mesh : public Component, public IRenderable
 {
 public:
-	INT Init(IDirect3DDevice9* pD3DDevice);
-	INT AddMaterial(IDirect3DDevice9* pD3DDevice, LPCTSTR path);
+	INT Init(IDirect3DDevice9* pD3DDeviceLPCTSTR, std::string fileName);
 	virtual void Render(IDirect3DDevice9* pD3DDevice);
 	virtual void DeInit();
 
@@ -26,5 +26,7 @@ private:
 	UINT indexCount = 0;
 
 	D3DMATRIX transformMatrix = {};
+
+	MeshData* pMeshData = nullptr;
 };
 

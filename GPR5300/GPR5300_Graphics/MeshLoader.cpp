@@ -1,18 +1,22 @@
 #include "MeshLoader.h"
 
+MeshData* MeshLoader::data = nullptr;
+
 MeshData* MeshLoader::LoadFromFile(string fileName)
 {
     data = new MeshData;
-    string path = "Models/" + fileName;
+    data->Init();
+
+    string path = "Models/Objects/" + fileName + ".obj";
     string token;
 
     ifstream filestream(path);
     while (getline(filestream, token))
-    {
         ParseLine(token);
-    }
 
-    return nullptr;
+    BuildVertices();
+
+    return data;
 }
 
 void MeshLoader::ParseLine(string line)
@@ -26,11 +30,11 @@ void MeshLoader::ParseLine(string line)
 
 void MeshLoader::ParseMaterial(string line)
 {
+    string prefix, materialName;
+    istringstream s(line);
+    s >> prefix >> materialName;
 
-}
-
-void MeshLoader::ParseTexturePath(string line)
-{
+    data->materialFileName = materialName;
 }
 
 void MeshLoader::ParseVertexPosition(string line)
@@ -73,18 +77,16 @@ void MeshLoader::ParseFace(string line)
 
     istringstream s(line);
     s >> prefix >> face1 >> face2 >> face3 >> face4;
-
+    
     ParseIndices(face1);
     ParseIndices(face2);
     ParseIndices(face3);
-    if (face4 == "")
-    {
+    if (face4 != "")
+    {        
         ParseIndices(face1);
         ParseIndices(face3);
         ParseIndices(face4);
     }
-
-    //build here
 }
 
 void MeshLoader::ParseIndices(string line)
@@ -92,13 +94,35 @@ void MeshLoader::ParseIndices(string line)
     string token;
     istringstream s(line);
 
-    getline(s, token, '/');
-    data->vertexIndices->push_back(atoi(token.c_str()));
+    data->indexCount++;
+    data->vertexCount++;
 
     getline(s, token, '/');
-    data->uvIndices->push_back(atoi(token.c_str()));
+    data->vertexIndices->push_back(atoi(token.c_str()) - 1);
 
     getline(s, token, '/');
-    data->normalIndices->push_back(atoi(token.c_str()));
-    
+    data->uvIndices->push_back(atoi(token.c_str()) - 1);
+
+    getline(s, token, '/');
+    data->normalIndices->push_back(atoi(token.c_str()) - 1);   
+}
+
+void MeshLoader::BuildVertices()
+{
+    for (USHORT i = 0; i < data->vertexCount; i++)
+    {
+        USHORT posIndex = data->vertexIndices->at(i);
+        USHORT normalIndex = data->normalIndices->at(i);
+        USHORT uvIndex = data->uvIndices->at(i);
+        
+        data->vertices->push_back
+        (
+            Vertex
+            (
+                data->vertexPosition->at(posIndex),
+                data->vertexNormals->at(normalIndex),
+                data->textureCoordinates->at(uvIndex)
+            )
+        );
+    }  
 }

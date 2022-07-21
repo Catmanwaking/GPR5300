@@ -23,7 +23,7 @@ public:
 	std::vector<USHORT>* normalIndices;
 	std::vector<USHORT>* uvIndices;
 
-	std::string textureFileName;
+	std::string materialFileName;
 
 	void Init();
 	void DeInit();

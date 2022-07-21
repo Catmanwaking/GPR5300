@@ -52,7 +52,7 @@ INT Scene::AddMeshes()
 {
 	GameObject* go = new GameObject;
 
-	AddMesh(go);
+	AddMesh(go, "Cube");
 	AddRotator(go, Vector3(30.0f * toRadian, 0.0f, 0.0f));
 	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
 
@@ -72,14 +72,12 @@ INT Scene::AddCamera(GameObject* go, UINT width, UINT height)
 	return 0;
 }
 
-INT Scene::AddMesh(GameObject* go)
+INT Scene::AddMesh(GameObject* go, std::string path)
 {
 	Mesh* pMesh = new Mesh;
-	INT error = pMesh->Init(pD3DDevice);
+	INT error = pMesh->Init(pD3DDevice, path);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
-
-	pMesh->AddMaterial(pD3DDevice, TEXT("Models/Denser.png")); //TODO generalize
 
 	go->AddComponent(pMesh);
 
@@ -115,9 +113,9 @@ INT Scene::SetupCamera(UINT width, UINT height)
 	GameObject* go = new GameObject;
 
 	AddCamera(go, width, height);
-	AddMover(go, Vector3(-3.0f, 0.0f, 0.0f));
+	AddMover(go, Vector3(-6.0f, 0.0f, 0.0f));
 	AddRotator(go, Vector3(0.0f, 90.0f * toRadian, 0.0f));
-	go->transform.position += Vector3(0.0f, 0.0f, -1.0f);
+	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
 
 	gameObjects.push_back(go);
 

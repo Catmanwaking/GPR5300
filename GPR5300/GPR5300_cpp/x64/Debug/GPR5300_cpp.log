@@ -1,1 +1,6 @@
-﻿
+﻿  Board.cpp
+E:\GIT\GPR5300\GPR5300\GPR5300_cpp\Board.cpp(65,9): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+E:\GIT\GPR5300\GPR5300\GPR5300_cpp\Board.cpp(70,9): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+  GPR5300_cpp.cpp
+  Generating Code...
+  GPR5300_cpp.vcxproj -> E:\GIT\GPR5300\GPR5300\x64\Debug\GPR5300_cpp.exe

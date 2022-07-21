@@ -13,13 +13,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 
 	Window window = {};	
 	INT error = window.Init(hInstance, width, height);
-	if (error != 0)
-		return error;
+	if (error != 0) return error;
 
 	D3D d3d = {};
 	error = d3d.Init(window.GetWindowHandle(), width, height, windowed);
-	if (error != 0)
-		return error;
+	if (error != 0) return error;
 
 	if (!windowed)
 	{
@@ -29,8 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 
 	Scene scene = {};
 	error = scene.Init(d3d.GetDevice(), width, height);
-	if (error != 0)
-		return error;
+	if (error != 0) return error;
 
 	while (window.Run())
 	{

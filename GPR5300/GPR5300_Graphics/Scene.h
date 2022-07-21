@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d9.h>
 #include <vector>
+#include <string>
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "IUpdateable.h"
@@ -26,7 +27,7 @@ private:
 	INT AddMeshes();
 
 	INT AddCamera(GameObject* go, UINT width, UINT height);
-	INT AddMesh(GameObject* go/*, LPCWSTR path*/);
+	INT AddMesh(GameObject* go, std::string path);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);
 };

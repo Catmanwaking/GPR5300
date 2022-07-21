@@ -150,6 +150,7 @@
     <ClCompile Include="IUpdateable.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialLoader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="MeshLoader.cpp" />
@@ -168,6 +169,8 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="MaterialData.h" />
+    <ClInclude Include="MaterialLoader.h" />
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="Space.h" />

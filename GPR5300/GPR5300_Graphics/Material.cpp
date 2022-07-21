@@ -1,28 +1,29 @@
 #include "Material.h"
 #include "WICTextureLoader9.h"
 #include "Utils.h"
+#include "MaterialData.h"
+#include "MaterialLoader.h"
 
 using namespace DirectX;
 
-INT Material::Init(IDirect3DDevice9* pD3DDevice, LPCTSTR texturePath)
+INT Material::Init(IDirect3DDevice9* pD3DDevice, std::string materialName)
 {
-	HRESULT hr = CreateWICTextureFromFile(pD3DDevice, texturePath, &pTexture, 0, WIC_LOADER_MIP_AUTOGEN);
-	if (FAILED(hr))
-		return 50;
+	MaterialData* pMaterialData = MaterialLoader::LoadFromFile(materialName);
 
-	material.Ambient = { 1.0f, 1.0f, 1.0f, 1.0f };
-	material.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-	material.Specular = { 1.0f, 1.0f, 1.0f, 1.0f };
-	material.Power = 1024.0f;
-	//material.Emissive = { 1.0f, 0.0f, 0.0f, 1.0f };
+	HRESULT hr = CreateWICTextureFromFile(pD3DDevice, pMaterialData->textureFileName.c_str(),&pTexture, 0, WIC_LOADER_MIP_AUTOGEN);
+	if (FAILED(hr)) return 50;
+	material.Ambient = pMaterialData->ambient;
+	material.Diffuse = pMaterialData->diffuse;
+	material.Specular = pMaterialData->specular;
+	material.Power = pMaterialData->specularPower;
+	material.Emissive = pMaterialData->emissive;
 
 	return 0;
 }
 
 void Material::Render(IDirect3DDevice9* pD3DDevice)
 {
-	if (pTexture == nullptr)
-		return;
+	if (pTexture == nullptr) return;
 
 	pD3DDevice->SetTexture(0, pTexture);
 	pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
