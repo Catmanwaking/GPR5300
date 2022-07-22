@@ -18,6 +18,8 @@ INT Material::Init(IDirect3DDevice9* pD3DDevice, std::string materialName)
 	material.Power = pMaterialData->specularPower;
 	material.Emissive = pMaterialData->emissive;
 
+	pMaterialData = nullptr;
+
 	return 0;
 }
 

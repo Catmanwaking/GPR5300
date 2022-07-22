@@ -1,37 +1,12 @@
-﻿  Camera.cpp
-  D3D.cpp
-  GameObject.cpp
-  IUpdateable.h
+﻿  IUpdateable.h
   Material.cpp
   MaterialLoader.cpp
   Mesh.cpp
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Mesh.cpp(91,17): warning C4267: '=': conversion from 'size_t' to 'USHORT', possible loss of data
-  MeshData.cpp
   MeshLoader.cpp
   Mover.cpp
   Rotator.cpp
   Scene.cpp
   Time.cpp
-  Transform.cpp
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(53,19): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(52,3): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(51,19): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(63,20): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(62,6): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(61,20): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(73,3): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(71,6): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(83,6): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(81,3): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(93,19): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(92,6): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(91,19): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(103,20): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(102,3): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Transform.cpp(101,20): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-  Vector3.cpp
-  Vertex.cpp
-  WICTextureLoader9.cpp
   main.cpp
   Generating Code...
   GPR5300_Graphics.vcxproj -> E:\GIT\GPR5300\GPR5300\x64\Debug\GPR5300_GraphicsD3D9.exe

@@ -1,9 +1,9 @@
 #include "Mover.h"
 
-INT Mover::Init(Vector3 movement, Time* pTime)
+INT Mover::Init(Vector3 movement)
 {
 	this->movement = movement;
-	this->pTime = pTime;
+	this->pTime = Time::GetInstance();
 	return 0;
 }
 

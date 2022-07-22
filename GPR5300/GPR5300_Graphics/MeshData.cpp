@@ -4,6 +4,7 @@
 void MeshData::Init()
 {
 	vertices = new std::vector<Vertex>;
+	indices = new std::vector<USHORT>;
 
 	vertexPosition = new std::vector<XMFLOAT3>;
 	vertexNormals = new std::vector<XMFLOAT3>;
@@ -17,6 +18,7 @@ void MeshData::Init()
 void MeshData::DeInit()
 {
 	SafeClearAndDelete<std::vector<Vertex>>(vertices);
+	SafeClearAndDelete<std::vector<USHORT>>(indices);
 
 	SafeClearAndDelete<std::vector<XMFLOAT3>>(vertexPosition);
 	SafeClearAndDelete<std::vector<XMFLOAT3>>(vertexNormals);

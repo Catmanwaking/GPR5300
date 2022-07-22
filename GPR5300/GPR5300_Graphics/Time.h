@@ -12,13 +12,17 @@ typedef duration<FLOAT> Duration;//TODO duration in float
 class Time : public IUpdateable
 {
 public:
+	static Time* GetInstance();
+
 	INT Init();
 	virtual void Update();
 	void DeInit();
 
-	FLOAT GetDeltaTime() { return deltaTime; }
+	FLOAT const GetDeltaTime() { return deltaTime; }
 
 private:
+	static Time* instance;
+
 	TimePoint lastTimeStamp;
 	FLOAT deltaTime = 0.0f;
 };

@@ -9,7 +9,7 @@
 class Rotator : public Component, public IUpdateable
 {
 public:
-	INT Init(Vector3 rotation, Time* pTime);
+	INT Init(Vector3 rotation);
 	virtual void Update();
 	virtual void DeInit();
 	void SetSpace(Space relativeTo);

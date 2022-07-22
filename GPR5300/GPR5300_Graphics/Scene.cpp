@@ -14,8 +14,9 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 	this->pD3DDevice = pD3DDevice;
 	INT error = 0;
 
-	time = Time();
-	time.Init();
+	time = Time::GetInstance();
+	time->Init();
+
 	if (error = SetupCamera(width, height)) return error;
 	if (error = AddMeshes()) return error;
 
@@ -24,7 +25,7 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 
 void Scene::Update()
 {
-	time.Update();
+	time->Update();
 	for (IUpdateable* updateObj : updateables)
 	{
 		updateObj->Update();
@@ -45,7 +46,7 @@ void Scene::DeInit()
 	{
 		gameObj->DeInit();
 	}
-	time.DeInit();
+	time->DeInit();
 }
 
 INT Scene::AddMeshes()
@@ -87,7 +88,7 @@ INT Scene::AddMesh(GameObject* go, std::string path)
 INT Scene::AddMover(GameObject* go, Vector3 movement)
 {
 	Mover* pMover = new Mover;
-	INT error = pMover->Init(movement, &time);
+	INT error = pMover->Init(movement);
 	if (error) return error;
 	pMover->SetSpace(Space::Local);
 	updateables.push_back(dynamic_cast<IUpdateable*>(pMover));
@@ -99,7 +100,7 @@ INT Scene::AddMover(GameObject* go, Vector3 movement)
 INT Scene::AddRotator(GameObject* go, Vector3 rotation)
 {
 	Rotator* pRotator = new Rotator;
-	INT error = pRotator->Init(rotation, &time);
+	INT error = pRotator->Init(rotation);
 	if (error) return error;
 	pRotator->SetSpace(Space::Global);
 	updateables.push_back(dynamic_cast<IUpdateable*>(pRotator));

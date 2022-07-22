@@ -1,9 +1,11 @@
 #include "MeshLoader.h"
 
 MeshData* MeshLoader::data = nullptr;
+USHORT MeshLoader::currentIndex = 0;
 
 MeshData* MeshLoader::LoadFromFile(string fileName)
 {
+    currentIndex = 0;
     data = new MeshData;
     data->Init();
 
@@ -77,15 +79,16 @@ void MeshLoader::ParseFace(string line)
 
     istringstream s(line);
     s >> prefix >> face1 >> face2 >> face3 >> face4;
-    
+
     ParseIndices(face1);
     ParseIndices(face2);
     ParseIndices(face3);
     if (face4 != "")
     {        
-        ParseIndices(face1);
-        ParseIndices(face3);
+        data->indices->push_back(currentIndex - 3);
+        data->indices->push_back(currentIndex - 1);
         ParseIndices(face4);
+        data->indexCount += 2;
     }
 }
 
@@ -94,9 +97,6 @@ void MeshLoader::ParseIndices(string line)
     string token;
     istringstream s(line);
 
-    data->indexCount++;
-    data->vertexCount++;
-
     getline(s, token, '/');
     data->vertexIndices->push_back(atoi(token.c_str()) - 1);
 
@@ -104,7 +104,11 @@ void MeshLoader::ParseIndices(string line)
     data->uvIndices->push_back(atoi(token.c_str()) - 1);
 
     getline(s, token, '/');
-    data->normalIndices->push_back(atoi(token.c_str()) - 1);   
+    data->normalIndices->push_back(atoi(token.c_str()) - 1);
+
+    data->indices->push_back(currentIndex++);
+    data->indexCount++;
+    data->vertexCount++;
 }
 
 void MeshLoader::BuildVertices()

@@ -22,6 +22,9 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice, std::string path)
 	error = material.Init(pD3DDevice, pMeshData->materialFileName);
 	if (error) return error;
 
+	pMeshData->DeInit();
+	pMeshData = nullptr;
+
 	return 0;
 }
 
@@ -87,8 +90,8 @@ INT Mesh::InitIndexBuffer(IDirect3DDevice9* pD3DDevice)
 	hr = pIndexBuffer->Lock(0, 0, reinterpret_cast<void**>(&indices), 0);
 	if (FAILED(hr)) return 42;
 
-	for (size_t i = 0; i < indexCount; i++)
-		indices[i] = i;
+	for (USHORT i = 0; i < indexCount; i++) //TODO why does a breakpoint here break the program?
+		indices[i] = pMeshData->indices->at(i);
 
 	hr = pIndexBuffer->Unlock();
 	if (FAILED(hr)) return 44;

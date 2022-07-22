@@ -1,5 +1,16 @@
 #include "Time.h"
 
+Time* Time::instance = nullptr;
+
+Time* Time::GetInstance()
+{
+    if (instance == nullptr)
+    {
+        instance = new Time;
+    }
+    return instance;
+}
+
 INT Time::Init()
 {
     lastTimeStamp = HRC::now();

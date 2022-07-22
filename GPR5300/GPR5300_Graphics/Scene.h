@@ -16,12 +16,12 @@ public:
 	void DeInit();
 
 private:
-	IDirect3DDevice9* pD3DDevice;
+	IDirect3DDevice9* pD3DDevice = nullptr;
 	std::vector<GameObject*> gameObjects = {};
 	std::vector<IRenderable*> renderables = {};
 	std::vector<IUpdateable*> updateables = {};
 
-	Time time = {};
+	Time* time = nullptr;
 
 	INT SetupCamera(UINT width, UINT height);
 	INT AddMeshes();

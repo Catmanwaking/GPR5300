@@ -9,7 +9,7 @@
 class Mover : public Component, public IUpdateable
 {
 public:
-	INT Init(Vector3 movement, Time* pTime);
+	INT Init(Vector3 movement);
 	virtual void Update();
 	virtual void DeInit();
 	void SetSpace(Space relativeTo);

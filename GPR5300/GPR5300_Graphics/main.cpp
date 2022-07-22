@@ -9,7 +9,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 {
 	UINT width = 1080;
 	UINT height = 720;
-	BOOL windowed = true;
+	BOOL windowed = false;
 
 	Window window = {};	
 	INT error = window.Init(hInstance, width, height);

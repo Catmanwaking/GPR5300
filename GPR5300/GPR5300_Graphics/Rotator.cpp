@@ -1,9 +1,9 @@
 #include "Rotator.h"
 
-INT Rotator::Init(Vector3 rotation, Time* pTime)
+INT Rotator::Init(Vector3 rotation)
 {
 	this->rotation = rotation;
-	this->pTime = pTime;
+	this->pTime = Time::GetInstance();
     return 0;
 }
 

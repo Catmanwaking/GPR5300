@@ -22,6 +22,8 @@ private:
 
 	static void BuildVertices();
 
+
+	static USHORT currentIndex;
 	static MeshData* data;
 };
 
