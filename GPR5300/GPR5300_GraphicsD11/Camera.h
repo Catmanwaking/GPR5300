@@ -1,15 +1,20 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 class Camera
 {
 public:
-	INT Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight);
+	INT Init(UINT screenWidth, UINT screenHeight);
 	void Update();
 	void DeInit();
+	const XMFLOAT4X4& GetViewMatrix() const { return viewMatrix; }
+	const XMFLOAT4X4& GetProjectionMatrix() const { return projectionMatrix; }
 
 private:
-	D3DMATRIX viewMatrix = {};
-	D3DMATRIX projectionMatrix = {};
+	XMFLOAT4X4 viewMatrix = {};
+	XMFLOAT4X4 projectionMatrix = {};
 };
 

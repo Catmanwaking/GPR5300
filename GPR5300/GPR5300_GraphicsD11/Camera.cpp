@@ -1,9 +1,7 @@
-#include <DirectXMath.h>
+#pragma once
 #include "Camera.h"
 
-using namespace DirectX;
-
-INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight)
+INT Camera::Init(UINT screenWidth, UINT screenHeight)
 {
     XMMATRIX lookMatrix = XMMatrixLookToLH
     (
@@ -11,8 +9,7 @@ INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeig
         XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
         XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
     );
-    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&viewMatrix), lookMatrix);
-    pD3DDevice->SetTransform(D3DTS_VIEW, &viewMatrix);
+    XMStoreFloat4x4(&viewMatrix, lookMatrix);
 
     XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovLH
     (
@@ -21,8 +18,7 @@ INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeig
         0.3f,
         1000.0f
     );
-    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&projectionMatrix), perspectiveMatrix);
-    pD3DDevice->SetTransform(D3DTS_PROJECTION, &projectionMatrix);
+    XMStoreFloat4x4(&projectionMatrix, perspectiveMatrix);
 
     return 0;
 }

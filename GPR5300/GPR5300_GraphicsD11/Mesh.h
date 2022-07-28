@@ -12,6 +12,8 @@ public:
 	void Render(ID3D11DeviceContext* pD3DDeviceContext);
 	void DeInit();
 
+	const XMFLOAT4X4& GetWorldMatrix() const { return transformMatrix; }
+
 private:
 	INT InitVertexBuffer(ID3D11Device* pD3DDevice);
 	INT InitIndexBuffer(ID3D11Device* pD3DDevice);

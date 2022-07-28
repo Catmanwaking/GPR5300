@@ -1,19 +1,31 @@
 #include "Light.h"
 #include "Utils.h"
 
-INT Light::Init(D3DLIGHT9& light, DWORD id)
+INT Light::Init(ID3D11Device* pD3DDevice, LightData& light, UINT id)
 {
     this->light = light;
     this->id = id;
+
+    D3D11_BUFFER_DESC desc = {};
+    desc.ByteWidth = sizeof(LightData);
+    desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    desc.Usage = D3D11_USAGE_IMMUTABLE;
+
+    D3D11_SUBRESOURCE_DATA data = {};
+    data.pSysMem = &light;
+
+    HRESULT hr = pD3DDevice->CreateBuffer(&desc, &data, &pLightBuffer);
+    if (FAILED(hr)) return 60;
+
     return 0;
 }
 
-void Light::Render(IDirect3DDevice9* pD3DDevice)
+void Light::Render(ID3D11DeviceContext* pD3DDeviceContext)
 {
-    pD3DDevice->SetLight(id, &light);
-    pD3DDevice->LightEnable(id, TRUE);
+    pD3DDeviceContext->PSSetConstantBuffers(id, 1, &pLightBuffer);
 }
 
 void Light::DeInit()
 {
+    SafeRelease<ID3D11Buffer>(pLightBuffer);
 }

@@ -26,10 +26,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	error = mesh.Init(d3d.GetDevice());
 	if (error != 0) return error;
 
-	//Camera camera = {};
-	//error = camera.Init(d3d.GetDevice(), width, height);
-	//if (error != 0)
-	//	return error;
+	Camera camera = {};
+	error = camera.Init(width, height);
+	if (error != 0)
+		return error;
 
 	Time time = {};
 	error = time.Init();
@@ -41,41 +41,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	if (error != 0)
 		return error;
 
-	//D3DLIGHT9 lightData = {};
-	//lightData.Type = D3DLIGHT_POINT;
-	//lightData.Position = { 0.0f, 0.0f, -0.5f };
-	//lightData.Ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
-	//lightData.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//lightData.Specular = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//lightData.Range = 10.0f;
-	//lightData.Attenuation0 = 1.0f;
-	//lightData.Attenuation1 = 0.2f;
-	//lightData.Attenuation2 = 0.1f;
+	Light::LightData lightData = {};
+	lightData.direction = { 1.0f, -1.0f, 1.0f };
+	lightData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	lightData.intensity = 1.0f;
 
-	//Light light = {};
-	//error = light.Init(lightData, 0);
-	//if (error != 0)
-	//	return error;
+	Light light = {};
+	error = light.Init(d3d.GetDevice(), lightData, 0);
+	if (error != 0)
+		return error;
 
 	while (window.Run())
 	{
 		time.Update();
-		//camera.Update();
+		camera.Update();
 		mesh.Update();
 
 		d3d.BeginScene();
 
-		//light.Render(d3d.GetDevice());
-		material.Render(d3d.GetDeviceContext());
+		light.Render(d3d.GetDeviceContext());
+		material.Render(d3d.GetDeviceContext(), mesh.GetWorldMatrix(), camera.GetViewMatrix(), camera.GetProjectionMatrix());
 		mesh.Render(d3d.GetDeviceContext());
+
+		//2nd Mesh depth stenicling
 
 		d3d.EndScene();
 	}
 
-	//light.DeInit();
+	light.DeInit();
 	material.DeInit();
 	time.DeInit();
-	//camera.DeInit();
+	camera.DeInit();
 	mesh.DeInit();
 	d3d.DeInit();
 	window.DeInit();

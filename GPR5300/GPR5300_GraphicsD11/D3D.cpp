@@ -60,8 +60,13 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	viewPort.MinDepth = 0.0f;
 	viewPort.MaxDepth = 1.0f;
 
-	pD3DDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
-	pD3DDeviceContext->RSSetViewports(1, &viewPort);
+	D3D11_RASTERIZER_DESC rasterizerDesc = {};
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.FrontCounterClockwise = FALSE;
+
+	hr = pD3DDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
+	if (FAILED(hr)) return 29;
 
 	//D3DDISPLAYMODE mode = {};
 	//pD3D->GetAdapterDisplayMode(adapter, &mode);
@@ -71,11 +76,9 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	//d3dpp.EnableAutoDepthStencil = TRUE;
 	//d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 
-	//pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	//pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	//pD3DDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
-	//pD3DDevice->SetRenderState(D3DRS_COLORVERTEX, FALSE);
+	pD3DDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
+	pD3DDeviceContext->RSSetViewports(1, &viewPort);
+	pD3DDeviceContext->RSSetState(pRasterizerState);
 
 	//SafeRelease<IDirect3D9>(pD3D);
 

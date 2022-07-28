@@ -21,13 +21,13 @@ INT Mesh::Init(ID3D11Device* pD3DDevice)
 
 void Mesh::Update()
 {
-	static float pos = 0.0f;
+	static float rot = 0.0f;
 	if (GetAsyncKeyState('W') & 0x8000)
-		pos -= 0.01f;
+		rot -= 0.001f;
 	if (GetAsyncKeyState('S') & 0x8000)
-		pos += 0.01f;
+		rot += 0.001f;
 
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, rot, 0.0f);
 	XMMATRIX transform = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 	XMMATRIX scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 	XMStoreFloat4x4(&transformMatrix, scaleMatrix * rotationMatrix * transform);
@@ -55,10 +55,10 @@ INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 
 	Vertex vertices[] = 
 	{
-		Vertex(-0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f),
-		Vertex(0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f),
-		Vertex(0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f),
-		Vertex(-0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f)
+		Vertex(-0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f),
+		Vertex( 0.5f,  0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f),
+		Vertex( 0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f),
+		Vertex(-0.5f, -0.5f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f)
 	};
 
 	D3D11_BUFFER_DESC bufferDesc = {};

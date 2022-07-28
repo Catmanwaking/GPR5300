@@ -21,5 +21,6 @@ private:
 	ID3D11DeviceContext* pD3DDeviceContext = nullptr;
 	IDXGISwapChain* pDXGISwapChain = nullptr;
 	ID3D11RenderTargetView* pRenderTargetView = nullptr;
+	ID3D11RasterizerState* pRasterizerState = nullptr;
 };
 

@@ -12,6 +12,18 @@
     <ContentFile>
       <FullPath>E:\GIT\GPR5300\GPR5300\GPR5300_GraphicsD11\ColorVertexShader.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>E:\GIT\GPR5300\GPR5300\GPR5300_GraphicsD11\LightPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\GIT\GPR5300\GPR5300\GPR5300_GraphicsD11\LightVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\GIT\GPR5300\GPR5300\GPR5300_GraphicsD11\TexturePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\GIT\GPR5300\GPR5300\GPR5300_GraphicsD11\TextureVertexShader.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

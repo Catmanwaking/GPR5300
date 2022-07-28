@@ -1,15 +1,26 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 class Light
 {
 public:
-	INT Init(D3DLIGHT9& light, DWORD id);
-	void Render(IDirect3DDevice9* pD3DDevice);
+	struct LightData
+	{
+		XMFLOAT3 direction;
+		FLOAT intensity;
+		XMFLOAT4 color;
+	};
+
+	INT Init(ID3D11Device* pD3DDevice, LightData& light, UINT id);
+	void Render(ID3D11DeviceContext* pD3DDeviceContext);
 	void DeInit();
 
 private:
-	D3DLIGHT9 light = {};
-	DWORD id = 0;
+	UINT id = 0;
+	LightData light = {};
+	ID3D11Buffer* pLightBuffer = nullptr;
 };
 
