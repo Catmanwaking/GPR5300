@@ -13,6 +13,7 @@ public:
 	HWND GetWindowHandle() { return hWnd; }
 
 private:
+	RECT wr = {};
 	HWND hWnd;
 };
 

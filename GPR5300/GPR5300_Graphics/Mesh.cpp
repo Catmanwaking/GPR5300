@@ -19,8 +19,11 @@ INT Mesh::Init(IDirect3DDevice9* pD3DDevice, std::string path)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = material.Init(pD3DDevice, pMeshData->materialFileName);
-	if (error) return error;
+	if (!pMeshData->materialFileName.empty())
+	{
+		error = material.Init(pD3DDevice, pMeshData->materialFileName);
+		if (error) return error;
+	}
 
 	pMeshData->DeInit();
 	pMeshData = nullptr;

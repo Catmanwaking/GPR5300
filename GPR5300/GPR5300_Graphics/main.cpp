@@ -23,6 +23,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	{
 		width = d3d.GetWidth();
 		height = d3d.GetHeight();
+
 	}
 
 	Scene scene = {};

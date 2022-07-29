@@ -1,4 +1,8 @@
 #include "Window.h"
+#include "MouseInputManager.h"
+#include <WinUser.h>
+#include <stdio.h>
+#include <memory>
 
 INT Window::Init(HINSTANCE hInstance, UINT width, UINT height)
 {
@@ -36,6 +40,7 @@ INT Window::Init(HINSTANCE hInstance, UINT width, UINT height)
 
 	if (hWnd == nullptr) return 12;
 
+	ShowCursor(false);
 	ShowWindow(hWnd, SW_NORMAL);
 	SetFocus(hWnd);
 
@@ -59,6 +64,9 @@ void Window::DeInit()
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	FLOAT x = 0.0f;
+	FLOAT y = 0.0f;
+
 	switch (msg)
 	{
 	case WM_CLOSE:
@@ -72,14 +80,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
 			DestroyWindow(hWnd);
-
-		//Handle Key Press
 		break;
 
-	case WM_MOUSEMOVE:
-
-		//Handle Mouse Movement
-		break;
+	//case WM_MOUSEMOVE:
+	//	x = LOWORD(lParam);
+	//	y = HIWORD(lParam);
+	//	MouseInputManager::GetInstance()->AddMouseDelta(x,y);
+	//	break;
 
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);

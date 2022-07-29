@@ -11,9 +11,9 @@ Vector3 Vector3::operator*(FLOAT right)
 
 void Vector3::operator*=(FLOAT right)
 {
-    this->x += right;
-    this->y += right;
-    this->z += right;
+    this->x *= right;
+    this->y *= right;
+    this->z *= right;
 }
 
 Vector3 Vector3::operator+(Vector3 right)
