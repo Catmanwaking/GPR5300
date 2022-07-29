@@ -11,7 +11,7 @@ INT Camera::Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeig
     (
         XM_PIDIV2,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
-        0.3f,
+        0.1f,
         1000.0f
     );
     XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&projectionMatrix), perspectiveMatrix);

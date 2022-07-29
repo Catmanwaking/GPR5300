@@ -1,9 +1,0 @@
-﻿  D3D.cpp
-  main.cpp
-  Window.cpp
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Window.cpp(9,38): warning C4838: conversion from 'UINT' to 'LONG' requires a narrowing conversion
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Window.cpp(9,68): warning C4838: conversion from 'UINT' to 'LONG' requires a narrowing conversion
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Window.cpp(10,34): warning C4838: conversion from 'unsigned long' to 'LONG' requires a narrowing conversion
-E:\GIT\GPR5300\GPR5300\GPR5300_Graphics\Window.cpp(10,49): warning C4838: conversion from 'unsigned long' to 'LONG' requires a narrowing conversion
-  Generating Code...
-  GPR5300_Graphics.vcxproj -> E:\GIT\GPR5300\GPR5300\Debug\GPR5300_GraphicsD3D9.exe

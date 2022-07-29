@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "MouseInputManager.h"
 #include <WinUser.h>
 #include <stdio.h>
 #include <memory>
@@ -81,12 +80,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE)
 			DestroyWindow(hWnd);
 		break;
-
-	//case WM_MOUSEMOVE:
-	//	x = LOWORD(lParam);
-	//	y = HIWORD(lParam);
-	//	MouseInputManager::GetInstance()->AddMouseDelta(x,y);
-	//	break;
 
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);

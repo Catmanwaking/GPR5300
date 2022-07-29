@@ -48,9 +48,9 @@ Vector3 Transform::Forward()
 {
 	return Vector3
 	(
-		cos(rotation.z) * sin(rotation.y),
-		-sin(rotation.z),
-		cos(rotation.z) * cos(rotation.y)
+		cosf(rotation.z) * sinf(rotation.y),
+		-sinf(rotation.z),
+		cosf(rotation.z) * cosf(rotation.y)
 	);
 }
 
@@ -58,9 +58,9 @@ Vector3 Transform::Back()
 {
 	return Vector3
 	(
-		-cos(rotation.z) * sin(rotation.y),
-		sin(rotation.z),
-		-cos(rotation.z) * cos(rotation.y)
+		-cosf(rotation.z) * sinf(rotation.y),
+		sinf(rotation.z),
+		-cosf(rotation.z) * cosf(rotation.y)
 	);
 }
 
@@ -68,9 +68,9 @@ Vector3 Transform::Right()
 {
 	return Vector3
 	(
-		cos(rotation.y),
+		cosf(rotation.y),
 		0.0f,
-		-sin(rotation.y)
+		-sinf(rotation.y)
 	);
 }
 
@@ -78,9 +78,9 @@ Vector3 Transform::Left()
 {
 	return Vector3
 	(
-		-cos(rotation.y),
+		-cosf(rotation.y),
 		0.0f,
-		sin(rotation.y)
+		sinf(rotation.y)
 	);
 }
 
@@ -88,9 +88,9 @@ Vector3 Transform::Up()
 {
 	return Vector3
 	(
-		sin(rotation.z) * sin(rotation.y),
-		cos(rotation.z),
-		sin(rotation.z) * cos(rotation.y)
+		sinf(rotation.z) * sinf(rotation.y),
+		cosf(rotation.z),
+		sinf(rotation.z) * cosf(rotation.y)
 	);
 }
 
@@ -98,9 +98,9 @@ Vector3 Transform::Down()
 {
 	return Vector3
 	(
-		-sin(rotation.z) * sin(rotation.y),
-		-cos(rotation.z),
-		-sin(rotation.z) * cos(rotation.y)
+		-sinf(rotation.z) * sinf(rotation.y),
+		-cosf(rotation.z),
+		-sinf(rotation.z) * cosf(rotation.y)
 	);
 }
 

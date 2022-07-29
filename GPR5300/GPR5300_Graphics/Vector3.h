@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d9.h>
 #include <DirectXMath.h>
+#include "Math.h"
 
 using namespace DirectX;
 
@@ -13,6 +14,11 @@ public:
 
 	Vector3() { x = 0.0f, y = 0.0f, z = 0.0f; }
 	Vector3(FLOAT x, FLOAT y, FLOAT z) { this->x = x, this->y = y, this->z = z; }
+
+	FLOAT Length();
+	FLOAT LengthSqr();
+	void Normalize();
+
 	XMFLOAT3 ToXMFloat() { return XMFLOAT3(x, y, z); }
 	XMVECTOR ToXMVector() { return XMVectorSet(x, y, z, 0.0f); }
 

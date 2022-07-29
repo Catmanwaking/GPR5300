@@ -151,10 +151,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialLoader.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="MeshLoader.cpp" />
-    <ClCompile Include="MouseInputManager.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Rotator.cpp" />
@@ -174,9 +174,9 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MaterialData.h" />
     <ClInclude Include="MaterialLoader.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshLoader.h" />
-    <ClInclude Include="MouseInputManager.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Space.h" />
     <ClInclude Include="IRenderable.h" />

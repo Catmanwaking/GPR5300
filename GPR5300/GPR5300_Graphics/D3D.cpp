@@ -41,9 +41,9 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	if (FAILED(hr))
 		return 24;
 
-	pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	SafeRelease<IDirect3D9>(pD3D);
 

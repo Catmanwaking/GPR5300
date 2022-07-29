@@ -6,7 +6,6 @@
 #include "IRenderable.h"
 #include "IUpdateable.h"
 #include "Time.h"
-#include "MouseInputManager.h"
 
 class Scene
 {
@@ -23,7 +22,6 @@ private:
 	std::vector<IUpdateable*> updateables = {};
 
 	Time* pTime = nullptr;
-	MouseInputManager* pMouseInputManager = nullptr;
 
 	INT SetupCamera(UINT width, UINT height);
 	INT AddMeshes();
@@ -32,6 +30,6 @@ private:
 	INT AddMesh(GameObject* go, std::string path);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);
-	INT AddPlayerController(GameObject* go);
+	INT AddPlayerController(GameObject* go, UINT width, UINT height);
 };
 

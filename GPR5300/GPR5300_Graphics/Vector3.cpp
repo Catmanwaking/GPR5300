@@ -1,5 +1,25 @@
 #include "Vector3.h"
 
+FLOAT Vector3::Length()
+{
+    return sqrtf(LengthSqr());
+}
+
+FLOAT Vector3::LengthSqr()
+{
+    return this->x * this->x + this->y * this->y + this->z * this->z;
+}
+
+void Vector3::Normalize()
+{
+    FLOAT length = Length();
+    if (length < 0.000001f) return;
+    FLOAT invLength = 1.0f / length;
+    this->x *= invLength;
+    this->y *= invLength;
+    this->z *= invLength;
+}
+
 Vector3 Vector3::operator*(FLOAT right)
 {
     Vector3 left;

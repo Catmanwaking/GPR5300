@@ -18,9 +18,6 @@ INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
 	pTime = Time::GetInstance();
 	pTime->Init();
 
-	pMouseInputManager = MouseInputManager::GetInstance();
-	pMouseInputManager->Init();
-
 	if (error = SetupCamera(width, height)) return error;
 	if (error = AddMeshes()) return error;
 
@@ -34,7 +31,6 @@ void Scene::Update()
 	{
 		updateObj->Update();
 	}
-	pMouseInputManager->ClearMouseDelta();
 }
 
 void Scene::Render()
@@ -58,7 +54,7 @@ INT Scene::AddMeshes()
 {
 	GameObject* go = new GameObject;
 
-	AddMesh(go, "Teapot");
+	AddMesh(go, "Cube");
 	//AddRotator(go, Vector3(30.0f * toRadian, 0.0f, 0.0f));
 	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
 
@@ -116,10 +112,10 @@ INT Scene::AddRotator(GameObject* go, Vector3 rotation)
 	return 0;
 }
 
-INT Scene::AddPlayerController(GameObject* go)
+INT Scene::AddPlayerController(GameObject* go, UINT width, UINT height)
 {
 	PlayerController* pController = new PlayerController;
-	INT error = pController->Init();
+	INT error = pController->Init(width, height);
 	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pController));
 	go->AddComponent(pController);
@@ -134,7 +130,7 @@ INT Scene::SetupCamera(UINT width, UINT height)
 	AddCamera(go, width, height);
 	//AddMover(go, Vector3(-6.0f, 0.0f, 0.0f));
 	//AddRotator(go, Vector3(0.0f, 90.0f * toRadian, 0.0f));
-	AddPlayerController(go);
+	AddPlayerController(go, width, height);
 	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
 
 	gameObjects.push_back(go);

@@ -4,9 +4,9 @@
 class Transform
 {
 public:
-	Vector3 position;
-	Vector3 rotation;
-	Vector3 scale;
+	Vector3 position = {};
+	Vector3 rotation = {};
+	Vector3 scale = {};
 
 	Transform();
 	Transform(FLOAT posX, FLOAT posY, FLOAT posZ, FLOAT rotX, FLOAT rotY, FLOAT rotZ, FLOAT scaX, FLOAT scaY, FLOAT scaZ);
