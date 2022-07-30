@@ -11,9 +11,17 @@ void Rotator::Update()
 {
 	FLOAT deltaTime = pTime->GetDeltaTime();
 	if (relativeTo == Space::Global)
-		pTransform->rotation += rotation * deltaTime;
+	{
+		pTransform->rotation.RotateAround(Vector3::Forward(), rotation.z * deltaTime);
+		pTransform->rotation.RotateAround(Vector3::Right(), rotation.x * deltaTime);
+		pTransform->rotation.RotateAround(Vector3::Up(), rotation.y * deltaTime);
+	}
 	else
-		pTransform->rotation += rotation * deltaTime; //TODO
+	{
+		pTransform->rotation.RotateAround(pTransform->Forward(), rotation.z * deltaTime);
+		pTransform->rotation.RotateAround(pTransform->Right(), rotation.x * deltaTime);
+		pTransform->rotation.RotateAround(pTransform->Up(), rotation.y * deltaTime);
+	}
 }
 
 void Rotator::DeInit()

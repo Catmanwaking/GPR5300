@@ -7,71 +7,68 @@ FLOAT Vector3::Length()
 
 FLOAT Vector3::LengthSqr()
 {
-    return this->x * this->x + this->y * this->y + this->z * this->z;
+    return x * x + y * y + z * z;
 }
 
 void Vector3::Normalize()
 {
     FLOAT length = Length();
-    if (length < 0.000001f) return;
-    FLOAT invLength = 1.0f / length;
-    this->x *= invLength;
-    this->y *= invLength;
-    this->z *= invLength;
+    if (length == 0.0f) return;
+    (*this) *= (1 / length);
 }
 
-Vector3 Vector3::operator*(FLOAT right)
+Vector3 Vector3::operator*(FLOAT scalar)
 {
     Vector3 left;
-    left.x = this->x * right;
-    left.y = this->y * right;
-    left.z = this->z * right;
+    left.x = x * scalar;
+    left.y = y * scalar;
+    left.z = z * scalar;
     return left;
 }
 
-void Vector3::operator*=(FLOAT right)
+void Vector3::operator*=(FLOAT scalar)
 {
-    this->x *= right;
-    this->y *= right;
-    this->z *= right;
+    x *= scalar;
+    y *= scalar;
+    z *= scalar;
 }
 
-Vector3 Vector3::operator+(Vector3 right)
+Vector3 Vector3::operator+(Vector3 v)
 {
     Vector3 left;
-    left.x = this->x + right.x;
-    left.y = this->y + right.y;
-    left.z = this->z + right.z;
+    left.x = x + v.x;
+    left.y = y + v.y;
+    left.z = z + v.z;
     return left;
 }
 
-void Vector3::operator+=(Vector3 right)
+void Vector3::operator+=(Vector3 v)
 {
-    this->x += right.x;
-    this->y += right.y;
-    this->z += right.z;
+    x += v.x;
+    y += v.y;
+    z += v.z;
 }
 
-Vector3 Vector3::operator-(Vector3 right)
+Vector3 Vector3::operator-(Vector3 v)
 {
     Vector3 left;
-    left.x = this->x - right.x;
-    left.y = this->y - right.y;
-    left.z = this->z - right.z;
+    left.x = x - v.x;
+    left.y = y - v.y;
+    left.z = z - v.z;
     return left;
 }
 
-void Vector3::operator-=(Vector3 right)
+void Vector3::operator-=(Vector3 v)
 {
-    this->x -= right.x;
-    this->y -= right.y;
-    this->z -= right.z;
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
 }
 
-FLOAT Vector3::operator*(Vector3 right)
+FLOAT Vector3::operator*(Vector3 v)
 {        
     return 
-        this->x * right.x +
-        this->y * right.y +
-        this->z * right.z;
+        x * v.x +
+        y * v.y +
+        z * v.z;
 }

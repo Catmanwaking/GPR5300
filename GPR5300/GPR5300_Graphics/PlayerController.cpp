@@ -55,9 +55,11 @@ void PlayerController::Rotate(FLOAT time)
 	GetCursorPos(&pos);
 	Vector2 mouseDelta = { FLOAT(pos.x - screenCenter.x), FLOAT(pos.y - screenCenter.y) };
 	mouseDelta *= (time * sensitivity * toRadian);
-	pTransform->rotation.z += mouseDelta.y; //TODO wrong axis;
-	pTransform->rotation.y += mouseDelta.x;
-	SetCursorPos(screenCenter.x, screenCenter.y);
 
-	pTransform->rotation.z = Math::Clamp(pTransform->rotation.z, -XM_PIDIV2, XM_PIDIV2);
+	camRotation.y += mouseDelta.x;
+	camRotation.x += mouseDelta.y;
+	camRotation.x = Math::Clamp(camRotation.x, -XM_PIDIV2, XM_PIDIV2);
+	pTransform->rotation = Quaternion(camRotation);
+
+	SetCursorPos(screenCenter.x, screenCenter.y);
 }

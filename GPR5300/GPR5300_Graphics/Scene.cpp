@@ -55,12 +55,12 @@ INT Scene::AddMeshes()
 	GameObject* go = new GameObject;
 
 	AddMesh(go, "Cube");
-	//AddRotator(go, Vector3(30.0f * toRadian, 0.0f, 0.0f));
+	AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
 	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
 
 	gameObjects.push_back(go);
 
-	go->transform.scale = Vector3(0.3f, 0.3f, 0.3f);
+	go->transform.rotation = Quaternion(Vector3(0.0f, 0.0f, XM_PIDIV4));
 
 	return 0;
 }
@@ -105,7 +105,7 @@ INT Scene::AddRotator(GameObject* go, Vector3 rotation)
 	Rotator* pRotator = new Rotator;
 	INT error = pRotator->Init(rotation);
 	if (error) return error;
-	pRotator->SetSpace(Space::Global);
+	pRotator->SetSpace(Space::Local);
 	updateables.push_back(dynamic_cast<IUpdateable*>(pRotator));
 	go->AddComponent(pRotator);
 
@@ -128,8 +128,6 @@ INT Scene::SetupCamera(UINT width, UINT height)
 	GameObject* go = new GameObject;
 
 	AddCamera(go, width, height);
-	//AddMover(go, Vector3(-6.0f, 0.0f, 0.0f));
-	//AddRotator(go, Vector3(0.0f, 90.0f * toRadian, 0.0f));
 	AddPlayerController(go, width, height);
 	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
 

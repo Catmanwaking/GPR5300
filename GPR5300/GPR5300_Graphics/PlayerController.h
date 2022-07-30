@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "IUpdateable.h"
 #include "Time.h"
+#include "Vector3.h"
 
 class PlayerController : public Component, public IUpdateable
 {
@@ -18,6 +19,7 @@ private:
 	Time* pTime = nullptr;
 	POINT pos = {};
 	POINT screenCenter = {};
+	Vector3 camRotation = {};
 
 	void Move(FLOAT time);
 	void Rotate(FLOAT time);

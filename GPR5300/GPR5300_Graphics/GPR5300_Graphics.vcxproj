@@ -157,6 +157,7 @@
     <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Space.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="Material.h" />
