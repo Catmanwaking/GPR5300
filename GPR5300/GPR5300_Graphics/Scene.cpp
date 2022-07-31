@@ -1,8 +1,7 @@
-#include <d3d9.h>
+#include <d3d11.h>
 #include "Scene.h"
 #include "GameObject.h"
 #include "Mesh.h"
-#include "Camera.h"
 #include "Mover.h"
 #include "Rotator.h"
 #include "PlayerController.h"
@@ -10,16 +9,17 @@
 
 using namespace Constants;
 
-INT Scene::Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height)
+INT Scene::Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, UINT width, UINT height)
 {
-	this->pD3DDevice = pD3DDevice;
+	this->pD3DDeviceContext = pDeviceContext;
 	INT error = 0;
 
 	pTime = Time::GetInstance();
 	pTime->Init();
 
 	if (error = SetupCamera(width, height)) return error;
-	if (error = AddMeshes()) return error;
+	if (error = AddLights(pD3DDevice)) return error;
+	if (error = AddMeshes(pD3DDevice)) return error;
 
 	return 0;
 }
@@ -35,9 +35,10 @@ void Scene::Update()
 
 void Scene::Render()
 {
+	pLight->Render(pD3DDeviceContext);
 	for (IRenderable* renderObj : renderables)
 	{
-		renderObj->Render(pD3DDevice);
+		renderObj->Render(pD3DDeviceContext, mainCam->GetViewProjectionMatrix());
 	}
 }
 
@@ -50,11 +51,38 @@ void Scene::DeInit()
 	pTime->DeInit();
 }
 
-INT Scene::AddMeshes()
+INT Scene::SetupCamera(UINT width, UINT height)
 {
 	GameObject* go = new GameObject;
 
-	AddMesh(go, "Cube");
+	AddCamera(go, width, height);
+	AddPlayerController(go, width, height);
+	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
+
+	gameObjects.push_back(go);
+
+	return 0;
+}
+
+INT Scene::AddLights(ID3D11Device* pD3DDevice)
+{
+	Light::LightData lightData = {};
+	lightData.direction = { 1.0f, -1.0f, 1.0f };
+	lightData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	lightData.intensity = 1.0f;
+
+	pLight = new Light();
+	INT error = pLight->Init(pD3DDevice, lightData, 0);
+	if (error) return error;
+
+	return 0;
+}
+
+INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
+{
+	GameObject* go = new GameObject;
+
+	AddMesh(go, pD3DDevice, "Cube");
 	AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
 	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
 
@@ -68,15 +96,17 @@ INT Scene::AddMeshes()
 INT Scene::AddCamera(GameObject* go, UINT width, UINT height)
 {
 	Camera* pCamera = new Camera;
-	INT error = pCamera->Init(pD3DDevice, width, height);
+	INT error = pCamera->Init(width, height);
 	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pCamera));
 	go->AddComponent(pCamera);
 
+	mainCam = pCamera;
+
 	return 0;
 }
 
-INT Scene::AddMesh(GameObject* go, std::string path)
+INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path)
 {
 	Mesh* pMesh = new Mesh;
 	INT error = pMesh->Init(pD3DDevice, path);
@@ -119,19 +149,6 @@ INT Scene::AddPlayerController(GameObject* go, UINT width, UINT height)
 	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pController));
 	go->AddComponent(pController);
-
-	return 0;
-}
-
-INT Scene::SetupCamera(UINT width, UINT height)
-{
-	GameObject* go = new GameObject;
-
-	AddCamera(go, width, height);
-	AddPlayerController(go, width, height);
-	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
-
-	gameObjects.push_back(go);
 
 	return 0;
 }

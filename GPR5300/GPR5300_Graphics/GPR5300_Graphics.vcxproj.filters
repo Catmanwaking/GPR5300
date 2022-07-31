@@ -90,9 +90,6 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="WICTextureLoader9.cpp">
-      <Filter>Source Files\DirectX</Filter>
-    </ClCompile>
     <ClCompile Include="Rotator.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -122,6 +119,12 @@
     </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader11.cpp">
+      <Filter>Source Files\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,7 +197,7 @@
     <ClInclude Include="MeshLoader.h">
       <Filter>Header Files\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="WICTextureLoader9.h">
+    <ClInclude Include="WICTextureLoader11.h">
       <Filter>Header Files\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
@@ -203,5 +206,28 @@
     <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="ColorVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorPixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="TextureVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturePixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

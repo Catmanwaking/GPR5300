@@ -74,7 +74,7 @@ void MeshLoader::ParseVertexNormal(string line)
 
 void MeshLoader::ParseFace(string line)
 {
-	//TODO test
+	//TODO test with tri
 	string prefix, face1, face2, face3, face4;
 
 	istringstream s(line);

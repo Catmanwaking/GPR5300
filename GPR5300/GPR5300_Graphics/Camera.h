@@ -1,18 +1,25 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
 #include "GameObject.h"
 #include "IUpdateable.h"
+
+using namespace DirectX;
 
 class Camera : public Component, public IUpdateable
 {
 public:
-	INT Init(IDirect3DDevice9* pD3DDevice, UINT screenWidth, UINT screenHeight);
+	INT Init(UINT screenWidth, UINT screenHeight);
 	virtual void Update();
 	virtual void DeInit();
+	//const XMMATRIX& GetViewMatrix() const { return viewMatrix; }
+	//const XMMATRIX& GetProjectionMatrix() const { return projectionMatrix; }
+
+	const XMMATRIX& GetViewProjectionMatrix() const { return viewProjectionMatrix; }
 
 private:
-	IDirect3DDevice9* pD3DDevice = nullptr;
-	D3DMATRIX viewMatrix = {};
-	D3DMATRIX projectionMatrix = {};
+	XMMATRIX viewMatrix = {};
+	XMMATRIX projectionMatrix = {};
+	XMMATRIX viewProjectionMatrix = {}; //since (AB)C = A(BC)
 };
 

@@ -2,5 +2,5 @@
 class IRenderable
 {
 public:
-	virtual void Render(IDirect3DDevice9* pD3DDevice) {};
+	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& viewProjectionMatrix) {};
 };

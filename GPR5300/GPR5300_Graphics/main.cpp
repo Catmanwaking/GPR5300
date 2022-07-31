@@ -19,15 +19,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	error = d3d.Init(window.GetWindowHandle(), width, height, windowed);
 	if (error != 0) return error;
 
-	if (!windowed)
-	{
-		width = d3d.GetWidth();
-		height = d3d.GetHeight();
-
-	}
-
 	Scene scene = {};
-	error = scene.Init(d3d.GetDevice(), width, height);
+	error = scene.Init(d3d.GetDevice(), d3d.GetDeviceContext(), width, height);
 	if (error != 0) return error;
 
 	while (window.Run())

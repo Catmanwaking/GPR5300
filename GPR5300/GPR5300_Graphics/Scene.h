@@ -1,35 +1,39 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
 #include <vector>
 #include <string>
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "IUpdateable.h"
+#include "Camera.h"
 #include "Time.h"
+#include "Light.h"
 
 class Scene
 {
 public:
-	INT Init(IDirect3DDevice9* pD3DDevice, UINT width, UINT height);
+	INT Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, UINT width, UINT height);
 	void Update();
 	void Render();
 	void DeInit();
 
 private:
-	IDirect3DDevice9* pD3DDevice = nullptr;
+	ID3D11DeviceContext* pD3DDeviceContext = nullptr;
 	std::vector<GameObject*> gameObjects = {};
 	std::vector<IRenderable*> renderables = {};
 	std::vector<IUpdateable*> updateables = {};
 
+	Camera* mainCam = nullptr;
 	Time* pTime = nullptr;
+	Light* pLight = nullptr;
 
 	INT SetupCamera(UINT width, UINT height);
-	INT AddMeshes();
+	INT AddLights(ID3D11Device* pD3DDevice);
+	INT AddMeshes(ID3D11Device* pD3DDevice);
 
 	INT AddCamera(GameObject* go, UINT width, UINT height);
-	INT AddMesh(GameObject* go, std::string path);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);
 	INT AddPlayerController(GameObject* go, UINT width, UINT height);
 };
-

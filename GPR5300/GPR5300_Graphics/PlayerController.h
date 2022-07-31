@@ -1,5 +1,5 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
 #include "Component.h"
 #include "IUpdateable.h"
 #include "Time.h"
@@ -13,7 +13,7 @@ public:
 	virtual void DeInit();
 
 private:
-	const FLOAT sensitivity = 2.5f;
+	const FLOAT sensitivity = 250.0f;
 	const FLOAT moveSpeed = 2.0f;
 	const FLOAT speedModifier = 3.0f;
 	Time* pTime = nullptr;

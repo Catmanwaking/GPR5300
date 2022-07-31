@@ -5,91 +5,48 @@ using namespace DirectX;
 
 Vertex::Vertex()
 { 
-	this->x = 0.0f, 
-	this->y = 0.0f, 
-	this->z = 0.0f, 
-	this->nx = 0.0f,
-	this->ny = 0.0f,
-	this->nz = 0.0f,
-	this->color = 0xffffffff, 
-	this->u = 0.0f, 
-	this->v = 0.0f; 
+	pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	uv = XMFLOAT2(0.0f, 0.0f);
+	color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z) 
 { 
-	this->x = x, 
-	this->y = y, 
-	this->z = z,
-	this->nx = 0.0f,
-	this->ny = 0.0f,
-	this->nz = 0.0f,
-	this->color = 0xffffffff, 
-	this->u = 0.0f, 
-	this->v = 0.0f; 
+	pos = XMFLOAT3(x, y, z);
+	normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	uv = XMFLOAT2(0.0f, 0.0f);
+	color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z, D3DCOLOR color)
+Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z, FLOAT r, FLOAT g, FLOAT b)
 {
-	this->x = x,
-	this->y = y,
-	this->z = z,
-	this->nx = 0.0f,
-	this->ny = 0.0f,
-	this->nz = 0.0f,
-	this->color = color,
-	this->u = 0.0f,
-	this->v = 0.0f;
-}
-
-Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z, BYTE r, BYTE g, BYTE b)
-{
-	this->x = x,
-	this->y = y,
-	this->z = z,
-	this->nx = 0.0f,
-	this->ny = 0.0f,
-	this->nz = 0.0f,
-	this->color = D3DCOLOR_XRGB(r,g,b),
-	this->u = 0.0f,
-	this->v = 0.0f;
+	pos = XMFLOAT3(x, y, z);
+	normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	uv = XMFLOAT2(0.0f, 0.0f);
+	color = XMFLOAT4(r, g, b, 1.0f);
 }
 
 Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z, FLOAT u, FLOAT v)
 {
-	this->x = x,
-	this->y = y,
-	this->z = z,
-	this->nx = 0.0f,
-	this->ny = 0.0f,
-	this->nz = 0.0f,
-	this->color = 0xffffffff,
-	this->u = u,
-	this->v = v;
+	pos = XMFLOAT3(x, y, z);
+	normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	uv = XMFLOAT2(u, v);
+	color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 Vertex::Vertex(FLOAT x, FLOAT y, FLOAT z, FLOAT nx, FLOAT ny, FLOAT nz, FLOAT u, FLOAT v)
 {
-	this->x = x,
-	this->y = y,
-	this->z = z,
-	this->nx = nx,
-	this->ny = ny,
-	this->nz = nz,
-	this->color = 0xffffffff,
-	this->u = u,
-	this->v = v;
+	pos = XMFLOAT3(x, y, z);
+	normal = XMFLOAT3(nx, ny, nz);
+	uv = XMFLOAT2(u, v);
+	color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 Vertex::Vertex(XMFLOAT3 position, XMFLOAT3 normal, XMFLOAT2 texCoord)
 {
-	this->x = position.x,
-	this->y = position.y,
-	this->z = position.z,
-	this->nx = normal.x,
-	this->ny = normal.y,
-	this->nz = normal.z,
-	this->color = 0xffffffff,
-	this->u = texCoord.x,
-	this->v = texCoord.y;
+	this->pos = position;
+	this->normal = normal;
+	this->uv = texCoord;
+	this->color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }

@@ -1,5 +1,7 @@
 #pragma once
-#include <d3d9.h>
+#include <d3d11.h>
+
+#pragma comment(lib, "d3d11.lib")
 
 class D3D
 {
@@ -9,13 +11,16 @@ public:
 	void EndScene();
 	void DeInit();
 
-	IDirect3DDevice9* GetDevice() { return pD3DDevice; }
-	UINT GetWidth() { return mode.Width; }
-	UINT GetHeight() { return mode.Height; }
+	ID3D11Device* GetDevice() { return pD3DDevice; }
+	ID3D11DeviceContext* GetDeviceContext() { return pD3DDeviceContext; }
+	//IDXGISwapChain* GetSwapChain() { return pSwapChain; }
+	//ID3D11RenderTargetView* GetRenderTargetView() { return pRenderTargetView; }
 
 private:
-	IDirect3DDevice9* pD3DDevice = nullptr;
-	D3DDISPLAYMODE mode = {};
-
+	ID3D11Device* pD3DDevice = nullptr;
+	ID3D11DeviceContext* pD3DDeviceContext = nullptr;
+	IDXGISwapChain* pSwapChain = nullptr;
+	ID3D11RenderTargetView* pRenderTargetView = nullptr;
+	ID3D11RasterizerState* pRasterizerState = nullptr;
 };
 
