@@ -8,11 +8,9 @@ using namespace Constants;
 
 INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path)
 {
-	INT error = 0;
-
 	pMeshData = MeshLoader::LoadFromFile(path);
 
-	error = InitVertexBuffer(pD3DDevice);
+	INT error = InitVertexBuffer(pD3DDevice);
 	if (error) return error;
 
 	error = InitIndexBuffer(pD3DDevice);

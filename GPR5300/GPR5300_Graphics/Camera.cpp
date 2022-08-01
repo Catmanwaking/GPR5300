@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-INT Camera::Init(UINT screenWidth, UINT screenHeight)
+INT Camera::Init(ID3D11Device* pD3DDevice, UINT screenWidth, UINT screenHeight, std::string skyBoxName)
 {
     projectionMatrix = XMMatrixPerspectiveFovLH
     (
@@ -12,17 +12,20 @@ INT Camera::Init(UINT screenWidth, UINT screenHeight)
         1000.0f
     );
 
+    skyBox.Init(pD3DDevice, skyBoxName);
+
     return 0;
 }
 
-void Camera::Update()
+void Camera::Render(ID3D11DeviceContext* pD3DDeviceContext)
 {
-    viewMatrix = XMMatrixLookToLH
-    (
-        pTransform->GetPosition().ToXMVector(),
-        pTransform->Forward().ToXMVector(),
-        pTransform->Up().ToXMVector()
-    );
+    XMVECTOR forward = pTransform->Forward().ToXMVector();
+    XMVECTOR up = pTransform->Up().ToXMVector();
+
+    viewMatrix = XMMatrixLookToLH(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), forward, up);
+    skyBox.Render(pD3DDeviceContext, viewMatrix * projectionMatrix);
+
+    viewMatrix = XMMatrixLookToLH(pTransform->GetPosition().ToXMVector(),forward,up);
     viewProjectionMatrix = viewMatrix * projectionMatrix;
 }
 

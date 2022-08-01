@@ -27,11 +27,11 @@ private:
 	Time* pTime = nullptr;
 	Light* pLight = nullptr;
 
-	INT SetupCamera(UINT width, UINT height);
+	INT SetupCamera(ID3D11Device* pD3DDevice, UINT width, UINT height);
 	INT AddLights(ID3D11Device* pD3DDevice);
 	INT AddMeshes(ID3D11Device* pD3DDevice);
 
-	INT AddCamera(GameObject* go, UINT width, UINT height);
+	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, UINT width, UINT height, std::string skyBoxName);
 	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);

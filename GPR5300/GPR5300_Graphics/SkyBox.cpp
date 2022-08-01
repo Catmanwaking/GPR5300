@@ -1,18 +1,25 @@
-#include "Material.h"
 #include <d3dcompiler.h>
 #include <xutility>
 #include "WICTextureLoader11.h"
+#include "SkyBox.h"
 #include "Utils.h"
 #include "MaterialData.h"
 #include "MaterialLoader.h"
+#include "MeshLoader.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-using namespace DirectX;
-
-INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName)
+INT SkyBox::Init(ID3D11Device* pD3DDevice, std::string skyBoxName)
 {
-	INT error = InitVertexShader(pD3DDevice);
+	pMeshData = MeshLoader::LoadFromFile(skyBoxName);
+
+	INT error = InitVertexBuffer(pD3DDevice);
+	if (error) return error;
+
+	error = InitIndexBuffer(pD3DDevice);
+	if (error) return error;
+
+	error = InitVertexShader(pD3DDevice);
 	if (error) return error;
 
 	error = InitPixelShader(pD3DDevice);
@@ -21,13 +28,16 @@ INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName)
 	error = InitMatrixBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = InitTextureAndSamplerState(pD3DDevice, materialName);
+	error = InitTextureAndSamplerState(pD3DDevice, pMeshData->materialFileName);
 	if (error) return error;
 
-	return 0;
+	pMeshData->DeInit();
+	pMeshData = nullptr;
+
+    return 0;
 }
 
-void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix)
+void SkyBox::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rViewProjectionMatrix)
 {
 	if (pTexture == nullptr) return;
 
@@ -35,12 +45,18 @@ void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rT
 	pD3DDeviceContext->VSSetShader(pVertexShader, nullptr, 0);
 	pD3DDeviceContext->PSSetShader(pPixelShader, nullptr, 0);
 
-	SetMatrixBuffer(pD3DDeviceContext, rTransformationMatrix, rViewProjectionMatrix);
+	SetMatrixBuffer(pD3DDeviceContext, rViewProjectionMatrix);
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
 	pD3DDeviceContext->PSSetSamplers(0, 1, &pSamplerState);
+
+	static UINT offset = 0;
+	pD3DDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &vertexStride, &offset);
+	pD3DDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	pD3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pD3DDeviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
-void Material::DeInit()
+void SkyBox::DeInit()
 {
 	SafeRelease<ID3D11SamplerState>(pSamplerState);
 	SafeRelease<ID3D11ShaderResourceView>(pTexture);
@@ -48,14 +64,54 @@ void Material::DeInit()
 	SafeRelease<ID3D11InputLayout>(pInputLayout);
 	SafeRelease<ID3D11PixelShader>(pPixelShader);
 	SafeRelease<ID3D11VertexShader>(pVertexShader);
+
+	SafeRelease<ID3D11Buffer>(pVertexBuffer);
+	SafeRelease<ID3D11Buffer>(pIndexBuffer);
 }
 
-INT Material::InitVertexShader(ID3D11Device* pD3DDevice)
+INT SkyBox::InitVertexBuffer(ID3D11Device* pD3DDevice)
+{
+	vertexCount = pMeshData->vertexCount;
+	vertexStride = sizeof(Vertex);
+
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.ByteWidth = vertexCount * vertexStride;
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+
+	D3D11_SUBRESOURCE_DATA subResourceData = {};
+	subResourceData.pSysMem = pMeshData->vertices->data();
+
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pVertexBuffer);
+	if (FAILED(hr)) return 30;
+
+	return 0;
+}
+
+INT SkyBox::InitIndexBuffer(ID3D11Device* pD3DDevice)
+{
+	indexCount = pMeshData->indexCount;
+
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.ByteWidth = indexCount * sizeof(USHORT);
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+
+	D3D11_SUBRESOURCE_DATA subResourceData = {};
+	subResourceData.pSysMem = pMeshData->indices->data();
+
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pIndexBuffer);
+	if (FAILED(hr)) return 32;
+
+	return 0;
+}
+
+INT SkyBox::InitVertexShader(ID3D11Device* pD3DDevice)
 {
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	hr = D3DReadFileToBlob(TEXT("LightVertexShader.cso"), &pCompiledShaderCode);
+	hr = D3DReadFileToBlob(TEXT("SkyBoxVertexShader.cso"), &pCompiledShaderCode);
 	if (FAILED(hr)) return 50;
 
 	hr = pD3DDevice->CreateVertexShader
@@ -75,12 +131,12 @@ INT Material::InitVertexShader(ID3D11Device* pD3DDevice)
 	return 0;
 }
 
-INT Material::InitPixelShader(ID3D11Device* pD3DDevice)
+INT SkyBox::InitPixelShader(ID3D11Device* pD3DDevice)
 {
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	hr = D3DReadFileToBlob(TEXT("LightPixelShader.cso"), &pCompiledShaderCode);
+	hr = D3DReadFileToBlob(TEXT("SkyBoxPixelShader.cso"), &pCompiledShaderCode);
 	if (FAILED(hr)) return 54;
 
 	hr = pD3DDevice->CreatePixelShader
@@ -97,7 +153,7 @@ INT Material::InitPixelShader(ID3D11Device* pD3DDevice)
 	return 0;
 }
 
-INT Material::InitInputLayot(ID3D11Device* pD3DDevice, ID3DBlob* pCompiledShaderCode)
+INT SkyBox::InitInputLayot(ID3D11Device* pD3DDevice, ID3DBlob* pCompiledShaderCode)
 {
 	D3D11_INPUT_ELEMENT_DESC elementDescription[4] = {}; //TODO INPUT LAYOUT DOESN'T CHANGE -> unify
 
@@ -130,7 +186,7 @@ INT Material::InitInputLayot(ID3D11Device* pD3DDevice, ID3DBlob* pCompiledShader
 	return 0;
 }
 
-INT Material::InitMatrixBuffer(ID3D11Device* pD3DDevice)
+INT SkyBox::InitMatrixBuffer(ID3D11Device* pD3DDevice)
 {
 	D3D11_BUFFER_DESC desc = {};
 	desc.ByteWidth = sizeof(MatrixBuffer);
@@ -144,7 +200,7 @@ INT Material::InitMatrixBuffer(ID3D11Device* pD3DDevice)
 	return 0;
 }
 
-INT Material::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName)
+INT SkyBox::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName)
 {
 	MaterialData* pMaterialData = MaterialLoader::LoadFromFile(materialName);
 
@@ -165,18 +221,15 @@ INT Material::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string m
 	return 0;
 }
 
-void Material::SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix)
+void SkyBox::SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rViewProjectionMatrix)
 {
-	XMMATRIX worldViewProjectionMatrix = XMMatrixTranspose(rTransformationMatrix * rViewProjectionMatrix);
-
 	D3D11_MAPPED_SUBRESOURCE data = {};
 	HRESULT hr = pD3DDeviceContext->Map(pMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	if (FAILED(hr)) return;
 
 	MatrixBuffer* matrixBuffer = static_cast<MatrixBuffer*>(data.pData);
 
-	XMStoreFloat4x4(&matrixBuffer->worldViewProjectionMatrix, worldViewProjectionMatrix);
-	XMStoreFloat4x4(&matrixBuffer->worldMatrix, XMMatrixTranspose(rTransformationMatrix));
+	XMStoreFloat4x4(&matrixBuffer->viewProjectionMatrix, XMMatrixTranspose(rViewProjectionMatrix));
 
 	pD3DDeviceContext->Unmap(pMatrixBuffer, 0);
 

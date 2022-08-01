@@ -12,7 +12,7 @@ INT PlayerController::Init(UINT width, UINT height)
 	screenCenter.y = height >> 1;
 
 	SetCursorPos(screenCenter.x, screenCenter.y);
-	ShowCursor(false);
+	//ShowCursor(false);
 	return 0;
 }
 

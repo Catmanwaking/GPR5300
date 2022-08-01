@@ -17,7 +17,7 @@ INT Scene::Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, U
 	pTime = Time::GetInstance();
 	pTime->Init();
 
-	if (error = SetupCamera(width, height)) return error;
+	if (error = SetupCamera(pD3DDevice, width, height)) return error;
 	if (error = AddLights(pD3DDevice)) return error;
 	if (error = AddMeshes(pD3DDevice)) return error;
 
@@ -36,6 +36,7 @@ void Scene::Update()
 void Scene::Render()
 {
 	pLight->Render(pD3DDeviceContext);
+	mainCam->Render(pD3DDeviceContext);
 	for (IRenderable* renderObj : renderables)
 	{
 		renderObj->Render(pD3DDeviceContext, mainCam->GetViewProjectionMatrix());
@@ -51,11 +52,11 @@ void Scene::DeInit()
 	pTime->DeInit();
 }
 
-INT Scene::SetupCamera(UINT width, UINT height)
+INT Scene::SetupCamera(ID3D11Device* pD3DDevice, UINT width, UINT height)
 {
 	GameObject* go = new GameObject;
 
-	AddCamera(go, width, height);
+	AddCamera(go, pD3DDevice, width, height, "skyBox");
 	AddPlayerController(go, width, height);
 	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
 
@@ -93,15 +94,13 @@ INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 	return 0;
 }
 
-INT Scene::AddCamera(GameObject* go, UINT width, UINT height)
+INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, UINT width, UINT height, std::string skyBoxName)
 {
 	Camera* pCamera = new Camera;
-	INT error = pCamera->Init(width, height);
+	INT error = pCamera->Init(pD3DDevice, width, height, skyBoxName);
 	if (error) return error;
-	updateables.push_back(dynamic_cast<IUpdateable*>(pCamera));
-	go->AddComponent(pCamera);
-
 	mainCam = pCamera;
+	go->AddComponent(pCamera);
 
 	return 0;
 }
@@ -112,7 +111,6 @@ INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path)
 	INT error = pMesh->Init(pD3DDevice, path);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
-
 	go->AddComponent(pMesh);
 
 	return 0;
