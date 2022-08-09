@@ -2,14 +2,14 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "MeshData.h"
+#include "MeshLoaderData.h"
 
 using namespace std;
 
 class MeshLoader
 {
 public:
-	static MeshData* LoadFromFile(string fileName);
+	static MeshLoaderData* LoadFromFile(string fileName);
 
 private:
 	static void ParseLine(string line);
@@ -21,9 +21,9 @@ private:
 	static void ParseIndices(string line);
 
 	static void BuildVertices();
-
+	static void CalculateTangentAndBiNormal();
 
 	static USHORT currentIndex;
-	static MeshData* data;
+	static MeshLoaderData* data;
 };
 

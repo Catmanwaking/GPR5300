@@ -5,14 +5,14 @@
 
 using namespace Constants;
 
-INT PlayerController::Init(UINT width, UINT height)
+INT PlayerController::Init()
 {
 	pTime = Time::GetInstance();
-	screenCenter.x = width >> 1;
-	screenCenter.y = height >> 1;
+	screenCenter.x = GetSystemMetrics(SM_CXSCREEN) >> 1;
+	screenCenter.y = GetSystemMetrics(SM_CYSCREEN) >> 1;
 
 	SetCursorPos(screenCenter.x, screenCenter.y);
-	//ShowCursor(false);
+	ShowCursor(false);
 	return 0;
 }
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <memory>
 
-INT Window::Init(HINSTANCE hInstance, UINT width, UINT height)
+INT Window::Init(HINSTANCE hInstance, UINT width, UINT height, BOOL windowed)
 {
 	DWORD style = WS_OVERLAPPEDWINDOW;
 	UINT screenWidth = GetSystemMetrics(SM_CXSCREEN);
@@ -11,7 +11,7 @@ INT Window::Init(HINSTANCE hInstance, UINT width, UINT height)
 
 	POINT pos = { (screenWidth - width) >> 1, (screenHeight - height) >> 1 };
 	RECT wr = { pos.x, pos.y, pos.x + width, pos.y + height };
-	AdjustWindowRect(&wr, style, false);
+	if(windowed) AdjustWindowRect(&wr, style, false);
 
 	WNDCLASS wc = { };
 	wc.hInstance = hInstance;

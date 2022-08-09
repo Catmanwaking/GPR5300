@@ -7,7 +7,6 @@ cbuffer MatrixBuffer
 cbuffer CameraBuffer
 {
     float3 cameraPosition;
-    float padding;
 };
 
 struct VertexInput
@@ -20,9 +19,9 @@ struct VertexInput
 struct VertexOutput
 {
     float4 position : SV_POSITION;
-    float3 normal : NORMAL0;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
-    float3 viewDir : NORMAL1;
+    float3 viewDir : TEXCOORD1;
 };
 
 VertexOutput main(VertexInput INPUT)
@@ -33,8 +32,8 @@ VertexOutput main(VertexInput INPUT)
     OUTPUT.normal = normalize(mul(INPUT.normal, (float3x3) worldMatrix));
     OUTPUT.uv = INPUT.uv;
     
-    float3 worldPos = mul(INPUT.position, (float3x3) worldMatrix);
-    OUTPUT.viewDir = normalize(cameraPosition - worldPos);
+    float4 worldPos = mul(float4(INPUT.position, 1.0f), worldMatrix);
+    OUTPUT.viewDir = normalize(cameraPosition - worldPos.xyz);
     
     return OUTPUT;
 }

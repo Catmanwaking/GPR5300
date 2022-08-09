@@ -6,11 +6,11 @@ Quaternion::Quaternion(Vector3 euler)
     FLOAT rollCos = cosf(euler.z * 0.5f);
     FLOAT rollSin = sinf(euler.z * 0.5f);
 
-    FLOAT yawCos = cosf(euler.y * 0.5f);
-    FLOAT yawSin = sinf(euler.y * 0.5f);
-
     FLOAT pitchCos = cosf(euler.x * 0.5f);
     FLOAT pitchSin = sinf(euler.x * 0.5f);
+
+    FLOAT yawCos = cosf(euler.y * 0.5f);
+    FLOAT yawSin = sinf(euler.y * 0.5f);
 
     w = pitchCos * yawCos * rollCos + pitchSin * yawSin * rollSin;
     x = pitchSin * yawCos * rollCos - pitchCos * yawSin * rollSin;

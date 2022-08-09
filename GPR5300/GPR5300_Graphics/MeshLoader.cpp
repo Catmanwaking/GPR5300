@@ -1,12 +1,12 @@
 #include "MeshLoader.h"
 
-MeshData* MeshLoader::data = nullptr;
+MeshLoaderData* MeshLoader::data = nullptr;
 USHORT MeshLoader::currentIndex = 0;
 
-MeshData* MeshLoader::LoadFromFile(string fileName)
+MeshLoaderData* MeshLoader::LoadFromFile(string fileName)
 {
 	currentIndex = 0;
-	data = new MeshData;
+	data = new MeshLoaderData;
 	data->Init();
 
 	string path = "Models/Objects/" + fileName + ".obj";
@@ -88,7 +88,6 @@ void MeshLoader::ParseFace(string line)
 		data->indices->push_back(currentIndex - 3);
 		data->indices->push_back(currentIndex - 1);
 		ParseIndices(face4);
-		data->indexCount += 2;
 	}
 }
 
@@ -107,13 +106,11 @@ void MeshLoader::ParseIndices(string line)
 	data->normalIndices->push_back(atoi(token.c_str()) - 1);
 
 	data->indices->push_back(currentIndex++);
-	data->indexCount++;
-	data->vertexCount++;
 }
 
 void MeshLoader::BuildVertices()
 {
-	for (USHORT i = 0; i < data->vertexCount; i++)
+	for (USHORT i = 0; i < data->vertexIndices->size(); i++)
 	{
 		USHORT posIndex = data->vertexIndices->at(i);
 		USHORT normalIndex = data->vertexNormals->empty() ? USHRT_MAX : data->normalIndices->at(i);
@@ -128,5 +125,61 @@ void MeshLoader::BuildVertices()
 				uvIndex == USHRT_MAX ? XMFLOAT2() : data->textureCoordinates->at(uvIndex)
 			)
 		);
+	}
+}
+
+void MeshLoader::CalculateTangentAndBiNormal()
+{
+	for (int i = 0; i < data->vertices->size(); i += 3)
+	{
+		float position1[3], position2[3];
+		float tuVector[2], tvVector[2];
+		float den, length;
+
+		XMFLOAT3 tangent, bitangent;
+
+		position1[0] = data->vertices->at(i + 1).pos.x - data->vertices->at(i).pos.x;
+		position1[1] = data->vertices->at(i + 1).pos.y - data->vertices->at(i).pos.y;
+		position1[2] = data->vertices->at(i + 1).pos.z - data->vertices->at(i).pos.z;
+
+		position2[0] = data->vertices->at(i + 2).pos.x - data->vertices->at(i).pos.x;
+		position2[1] = data->vertices->at(i + 2).pos.y - data->vertices->at(i).pos.y;
+		position2[2] = data->vertices->at(i + 2).pos.z - data->vertices->at(i).pos.z;
+
+		tuVector[0] = data->vertices->at(i + 1).uv.x - data->vertices->at(i).uv.x;
+		tvVector[0] = data->vertices->at(i + 1).uv.y - data->vertices->at(i).uv.y;
+
+		tuVector[1] = data->vertices->at(i + 2).uv.x - data->vertices->at(i).uv.x;
+		tvVector[1] = data->vertices->at(i + 2).uv.y - data->vertices->at(i).uv.y;
+
+		den = 1.0f / (tuVector[0] * tvVector[1] - tuVector[1] * tvVector[0]);
+
+		tangent.x = (tvVector[1] * position1[0] - tvVector[0] * position2[0]) * den;
+		tangent.y = (tvVector[1] * position1[1] - tvVector[0] * position2[1]) * den;
+		tangent.z = (tvVector[1] * position1[2] - tvVector[0] * position2[2]) * den;
+
+		bitangent.x = (tuVector[0] * position2[0] - tuVector[1] * position1[0]) * den;
+		bitangent.y = (tuVector[0] * position2[1] - tuVector[1] * position1[1]) * den;
+		bitangent.z = (tuVector[0] * position2[2] - tuVector[1] * position1[2]) * den;
+
+		length = sqrt((tangent.x * tangent.x) + (tangent.y * tangent.y) + (tangent.z * tangent.z));
+
+		tangent.x /= length;
+		tangent.y /= length;
+		tangent.z /= length;
+
+		length = sqrt((bitangent.x * bitangent.x) + (bitangent.y * bitangent.y) + (bitangent.z * bitangent.z));
+
+		bitangent.x = bitangent.x / length;
+		bitangent.y = bitangent.y / length;
+		bitangent.z = bitangent.z / length;
+
+		data->vertices->at(i).tangent = tangent;
+		data->vertices->at(i + 1).tangent = tangent;
+		data->vertices->at(i + 2).tangent = tangent;
+
+		data->vertices->at(i).binormal = bitangent;
+		data->vertices->at(i + 1).binormal = bitangent;
+		data->vertices->at(i + 2).binormal = bitangent;
 	}
 }

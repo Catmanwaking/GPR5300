@@ -3,10 +3,9 @@
 #include "Utils.h"
 #include "MeshLoader.h"
 
-using namespace DirectX;
 using namespace Constants;
 
-INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path)
+INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
 {
 	pMeshData = MeshLoader::LoadFromFile(path);
 
@@ -16,11 +15,27 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	if (!pMeshData->materialFileName.empty())
-	{
-		error = material.Init(pD3DDevice, pMeshData->materialFileName);
-		if (error) return error;
-	}
+	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+	if (error) return error;
+
+	pMeshData->DeInit();
+	pMeshData = nullptr;
+
+	return 0;
+}
+
+INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader)
+{
+	pMeshData = MeshGenerator::GenerateShape(shape);
+
+	INT error = InitVertexBuffer(pD3DDevice);
+	if (error) return error;
+
+	error = InitIndexBuffer(pD3DDevice);
+	if (error) return error;
+
+	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+	if (error) return error;
 
 	pMeshData->DeInit();
 	pMeshData = nullptr;
@@ -47,7 +62,7 @@ void Mesh::DeInit()
 
 INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 {
-	vertexCount = pMeshData->vertexCount;
+	vertexCount = pMeshData->vertices->size();
 	vertexStride = sizeof(Vertex);
 
 	D3D11_BUFFER_DESC bufferDesc = {};
@@ -66,7 +81,7 @@ INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 
 INT Mesh::InitIndexBuffer(ID3D11Device* pD3DDevice)
 {
-	indexCount = pMeshData->indexCount;
+	indexCount = pMeshData->indices->size();
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.ByteWidth = indexCount * sizeof(USHORT);

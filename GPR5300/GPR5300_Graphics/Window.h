@@ -6,7 +6,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
 class Window
 {
 public:
-	INT Init(HINSTANCE hInstance, UINT width, UINT height);
+	INT Init(HINSTANCE hInstance, UINT width, UINT height, BOOL windowed);
 	BOOL Run();
 	void DeInit();
 

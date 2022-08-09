@@ -9,6 +9,6 @@ struct PixelInput
 
 float4 main(PixelInput INPUT) : SV_TARGET
 {
-    //return 1.0f - MainTexture.Sample(MainSampler, INPUT.uv) * 2.0f;   
-    return MainTexture.Sample(MainSampler, INPUT.uv);
+    return 1.0f - MainTexture.Sample(MainSampler, INPUT.uv).arbr * 2.0f;   
+    //return MainTexture.Sample(MainSampler, INPUT.uv);
 }

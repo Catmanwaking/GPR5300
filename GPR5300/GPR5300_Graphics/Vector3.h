@@ -14,6 +14,7 @@ public:
 
 	Vector3() { x = 0.0f, y = 0.0f, z = 0.0f; }
 	Vector3(FLOAT x, FLOAT y, FLOAT z) { this->x = x, this->y = y, this->z = z; }
+	Vector3(XMFLOAT3 input) { x = input.x, y = input.y, z = input.z; }
 
 	FLOAT Length();
 	FLOAT LengthSqr();

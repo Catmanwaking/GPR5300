@@ -9,7 +9,8 @@ struct Vertex
 	XMFLOAT3 pos = {};
 	XMFLOAT3 normal = {};
 	XMFLOAT2 uv = {};
-	XMFLOAT4 color = {};
+	XMFLOAT3 tangent = {};
+	XMFLOAT3 binormal = {};
 
 	Vertex();
 	Vertex(FLOAT x, FLOAT y, FLOAT z);

@@ -1,7 +1,7 @@
-#include "MeshData.h"
+#include "MeshLoaderData.h"
 #include "Utils.h"
 
-void MeshData::Init()
+void MeshLoaderData::Init()
 {
 	vertices = new std::vector<Vertex>;
 	indices = new std::vector<USHORT>;
@@ -15,7 +15,7 @@ void MeshData::Init()
 	uvIndices = new std::vector<USHORT>;
 }
 
-void MeshData::DeInit()
+void MeshLoaderData::DeInit()
 {
 	SafeClearAndDelete<std::vector<Vertex>>(vertices);
 	SafeClearAndDelete<std::vector<USHORT>>(indices);

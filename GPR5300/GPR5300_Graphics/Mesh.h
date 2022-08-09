@@ -4,22 +4,24 @@
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "Material.h"
-#include "MeshData.h"
+#include "MeshLoaderData.h"
+#include "Shaders.h"
+#include "MeshGenerator.h"
 
 using namespace DirectX;
+using namespace Shaders;
 
 class Mesh : public Component, public IRenderable
 {
 public:
-	INT Init(ID3D11Device* pD3DDevice, std::string fileName);
+	virtual INT Init(ID3D11Device* pD3DDevice, std::string fileName, Shader shader);
+	virtual INT Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader);
 	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& viewProjectionMatrix);
 	virtual void DeInit();
 
-private:
+protected:
 	INT InitVertexBuffer(ID3D11Device* pD3DDevice);
 	INT InitIndexBuffer(ID3D11Device* pD3DDevice);
-
-	Material material = {};
 
 	ID3D11Buffer* pVertexBuffer = nullptr;
 	ID3D11Buffer* pIndexBuffer = nullptr;
@@ -30,6 +32,9 @@ private:
 
 	XMMATRIX transformMatrix = {};
 
-	MeshData* pMeshData = nullptr;
+	MeshLoaderData* pMeshData = nullptr;
+
+private:
+	Material material = {};
 };
 

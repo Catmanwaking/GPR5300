@@ -7,12 +7,9 @@
 
 using namespace DirectX;
 
-class MeshData
+class MeshLoaderData
 {
 public:
-	int vertexCount = 0;
-	int indexCount = 0;
-
 	std::vector<Vertex>* vertices = {};
 	std::vector<USHORT>* indices = {};
 

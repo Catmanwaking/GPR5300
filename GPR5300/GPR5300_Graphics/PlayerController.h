@@ -8,13 +8,13 @@
 class PlayerController : public Component, public IUpdateable
 {
 public:
-	INT Init(UINT width, UINT height);
+	INT Init();
 	virtual void Update();
 	virtual void DeInit();
 
 private:
 	const FLOAT sensitivity = 250.0f;
-	const FLOAT moveSpeed = 2.0f;
+	const FLOAT moveSpeed = 5.0f;
 	const FLOAT speedModifier = 3.0f;
 	Time* pTime = nullptr;
 	POINT pos = {};

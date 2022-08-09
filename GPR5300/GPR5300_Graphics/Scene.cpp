@@ -5,11 +5,14 @@
 #include "Mover.h"
 #include "Rotator.h"
 #include "PlayerController.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Utils.h"
+
 
 using namespace Constants;
 
-INT Scene::Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, UINT width, UINT height)
+INT Scene::Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height)
 {
 	this->pD3DDeviceContext = pDeviceContext;
 	INT error = 0;
@@ -17,7 +20,7 @@ INT Scene::Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, U
 	pTime = Time::GetInstance();
 	pTime->Init();
 
-	if (error = SetupCamera(pD3DDevice, width, height)) return error;
+	if (error = SetupCamera(pD3DDevice, pDepthStencilView, width, height)) return error;
 	if (error = AddLights(pD3DDevice)) return error;
 	if (error = AddMeshes(pD3DDevice)) return error;
 
@@ -35,8 +38,8 @@ void Scene::Update()
 
 void Scene::Render()
 {
-	pLight->Render(pD3DDeviceContext);
 	mainCam->Render(pD3DDeviceContext);
+	pLight->Render(pD3DDeviceContext);
 	for (IRenderable* renderObj : renderables)
 	{
 		renderObj->Render(pD3DDeviceContext, mainCam->GetViewProjectionMatrix());
@@ -52,12 +55,12 @@ void Scene::DeInit()
 	pTime->DeInit();
 }
 
-INT Scene::SetupCamera(ID3D11Device* pD3DDevice, UINT width, UINT height)
+INT Scene::SetupCamera(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height)
 {
 	GameObject* go = new GameObject;
 
-	AddCamera(go, pD3DDevice, width, height, "skyBox");
-	AddPlayerController(go, width, height);
+	AddCamera(go, pD3DDevice, pDepthStencilView, width, height, "skyBox");
+	AddPlayerController(go);
 	go->transform.position += Vector3(0.0f, 0.0f, -5.0f);
 
 	gameObjects.push_back(go);
@@ -67,13 +70,19 @@ INT Scene::SetupCamera(ID3D11Device* pD3DDevice, UINT width, UINT height)
 
 INT Scene::AddLights(ID3D11Device* pD3DDevice)
 {
-	Light::LightData lightData = {};
-	lightData.direction = { 1.0f, -1.0f, 1.0f };
-	lightData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	lightData.intensity = 1.0f;
+	pLight = new Light;
+	INT error = pLight->Init(pD3DDevice);
 
-	pLight = new Light();
-	INT error = pLight->Init(pD3DDevice, lightData, 0);
+	GameObject* go = new GameObject;
+
+	DirLightData dirLightData = {};
+	dirLightData.direction = { 1.0f, -1.0f, 1.0f };
+	dirLightData.color = { 0.0f, 1.0f, 1.0f, 1.0f };
+	dirLightData.intensity = 128.0f;
+	AddDirectionalLight(go, dirLightData);
+
+	go->transform.rotation = Quaternion(Vector3(45.0f * toRadian, 45.0f * toRadian, 0.0f));
+
 	if (error) return error;
 
 	return 0;
@@ -82,22 +91,24 @@ INT Scene::AddLights(ID3D11Device* pD3DDevice)
 INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 {
 	GameObject* go = new GameObject;
-
-	AddMesh(go, pD3DDevice, "Cube");
+	//AddMesh(go, pD3DDevice, "Cube");
 	AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
-	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
+	////AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
+	//gameObjects.push_back(go);
+	//go->transform.rotation = Quaternion(Vector3(0.0f, 0.0f, XM_PIDIV4));
 
+	//go = new GameObject;
+	AddMesh(go, pD3DDevice, MeshGenerator::Shape::IcoSpehre);
 	gameObjects.push_back(go);
-
-	go->transform.rotation = Quaternion(Vector3(0.0f, 0.0f, XM_PIDIV4));
+	//go->transform.position = Vector3(4.0f, 0.0f, 0.0f);
 
 	return 0;
 }
 
-INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, UINT width, UINT height, std::string skyBoxName)
+INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height, std::string skyBoxName)
 {
 	Camera* pCamera = new Camera;
-	INT error = pCamera->Init(pD3DDevice, width, height, skyBoxName);
+	INT error = pCamera->Init(pD3DDevice, pDepthStencilView, width, height, skyBoxName, Shader::SkyboxShader);
 	if (error) return error;
 	mainCam = pCamera;
 	go->AddComponent(pCamera);
@@ -108,7 +119,18 @@ INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, UINT width, UINT 
 INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path)
 {
 	Mesh* pMesh = new Mesh;
-	INT error = pMesh->Init(pD3DDevice, path);
+	INT error = pMesh->Init(pD3DDevice, path, Shader::LightShader);
+	if (error) return error;
+	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
+	go->AddComponent(pMesh);
+
+	return 0;
+}
+
+INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape)
+{
+	Mesh* pMesh = new Mesh;
+	INT error = pMesh->Init(pD3DDevice, shape, Shader::LightShader);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
 	go->AddComponent(pMesh);
@@ -140,13 +162,38 @@ INT Scene::AddRotator(GameObject* go, Vector3 rotation)
 	return 0;
 }
 
-INT Scene::AddPlayerController(GameObject* go, UINT width, UINT height)
+INT Scene::AddPlayerController(GameObject* go)
 {
 	PlayerController* pController = new PlayerController;
-	INT error = pController->Init(width, height);
+	INT error = pController->Init();
 	if (error) return error;
 	updateables.push_back(dynamic_cast<IUpdateable*>(pController));
 	go->AddComponent(pController);
+
+	return 0;
+}
+
+INT Scene::AddDirectionalLight(GameObject* go, DirLightData data)
+{
+	DirectionalLight* pDirLight = new DirectionalLight;
+	INT error = pDirLight->Init(data);
+	if (error) return error;
+	updateables.push_back(dynamic_cast<IUpdateable*>(pDirLight));
+	pLight->AddLight(pDirLight);
+	go->AddComponent(pDirLight);
+
+	return 0;
+}
+
+INT Scene::AddPointLight(GameObject* go, PointLightData data)
+{
+	PointLight* pPointLight = new PointLight;
+	INT error = pPointLight->Init(data);
+	if (error) return error;
+	updateables.push_back(dynamic_cast<IUpdateable*>(pPointLight));
+	pLight->AddLight(pPointLight);
+	go->AddComponent(pPointLight);
+
 
 	return 0;
 }

@@ -2,37 +2,49 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <string>
-#include "MeshData.h"
+#include "MaterialLoaderData.h"
+#include "Shaders.h"
 
-using namespace DirectX;
+using namespace Shaders;
+
+struct MatrixBuffer
+{
+	XMFLOAT4X4 worldViewProjectionMatrix;
+	XMFLOAT4X4 worldMatrix;
+};
+
+struct MaterialData
+{
+	XMFLOAT4 ambientColor;
+	XMFLOAT4 diffuseColor;
+	XMFLOAT4 specularColor;
+	XMFLOAT4 emissiveColor;
+	FLOAT dissolve;
+	FLOAT specularPower;
+};
 
 class Material
 {
 public:
-	INT Init(ID3D11Device* pD3DDevice, std::string materialName);
-	void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
-	void DeInit();
+	INT Init(ID3D11Device* pD3DDevice, std::string materialName, Shader shader);
+	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	virtual void DeInit();
 
-private:
-	INT InitVertexShader(ID3D11Device* pD3DDevice);
-	INT InitPixelShader(ID3D11Device* pD3DDevice);
-	INT InitInputLayot(ID3D11Device* pD3DDevice, ID3DBlob* pCompiledShaderCode);
+protected:
+	INT InitVertexShader(ID3D11Device* pD3DDevice, Shader shader);
+	INT InitPixelShader(ID3D11Device* pD3DDevice, Shader shader);
 	INT InitMatrixBuffer(ID3D11Device* pD3DDevice);
+	INT InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData);
 	INT InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName);
 
-	void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	virtual void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
 
 	ID3D11VertexShader* pVertexShader = nullptr;
 	ID3D11PixelShader* pPixelShader = nullptr;
 	ID3D11InputLayout* pInputLayout = nullptr;
 	ID3D11Buffer* pMatrixBuffer = nullptr;
-	struct MatrixBuffer
-	{
-		XMFLOAT4X4 worldViewProjectionMatrix;
-		XMFLOAT4X4 worldMatrix;
-	};
+	ID3D11Buffer* pMaterialBuffer = nullptr;
 
 	ID3D11ShaderResourceView* pTexture = nullptr;
 	ID3D11SamplerState* pSamplerState = nullptr;
 };
-

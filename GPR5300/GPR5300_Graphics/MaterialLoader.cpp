@@ -1,10 +1,10 @@
 #include "MaterialLoader.h"
 
-MaterialData* MaterialLoader::data = nullptr;
+MaterialLoaderData* MaterialLoader::data = nullptr;
 
-MaterialData* MaterialLoader::LoadFromFile(string fileName)
+MaterialLoaderData* MaterialLoader::LoadFromFile(string fileName)
 {
-    data = new MaterialData;
+    data = new MaterialLoaderData;
     string path = "Models/Materials/" + fileName;
     string token;
 

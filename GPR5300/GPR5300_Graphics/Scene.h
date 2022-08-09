@@ -8,11 +8,15 @@
 #include "Camera.h"
 #include "Time.h"
 #include "Light.h"
+#include "Shaders.h"
+#include "MeshGenerator.h"
+
+using namespace Shaders;
 
 class Scene
 {
 public:
-	INT Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, UINT width, UINT height);
+	INT Init(ID3D11Device* pD3DDevice, ID3D11DeviceContext* pDeviceContext, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height);
 	void Update();
 	void Render();
 	void DeInit();
@@ -27,13 +31,16 @@ private:
 	Time* pTime = nullptr;
 	Light* pLight = nullptr;
 
-	INT SetupCamera(ID3D11Device* pD3DDevice, UINT width, UINT height);
+	INT SetupCamera(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height);
 	INT AddLights(ID3D11Device* pD3DDevice);
 	INT AddMeshes(ID3D11Device* pD3DDevice);
 
-	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, UINT width, UINT height, std::string skyBoxName);
+	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height, std::string skyBoxName);
 	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);
-	INT AddPlayerController(GameObject* go, UINT width, UINT height);
+	INT AddPlayerController(GameObject* go);
+	INT AddDirectionalLight(GameObject* go, DirLightData data);
+	INT AddPointLight(GameObject* go, PointLightData data);
 };

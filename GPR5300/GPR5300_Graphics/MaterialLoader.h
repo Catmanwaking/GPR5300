@@ -2,14 +2,14 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "MaterialData.h"
+#include "MaterialLoaderData.h"
 
 using namespace std;
 
 class MaterialLoader
 {
 public:
-	static MaterialData* LoadFromFile(string fileName);
+	static MaterialLoaderData* LoadFromFile(string fileName);
 
 private:
 	static void ParseLine(string line);
@@ -21,6 +21,6 @@ private:
 	static void ParseDissolve(string line);
 	static void ParseTexture(string line);
 
-	static MaterialData* data;
+	static MaterialLoaderData* data;
 };
 

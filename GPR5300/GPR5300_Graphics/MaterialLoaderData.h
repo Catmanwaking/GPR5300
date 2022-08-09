@@ -6,15 +6,15 @@
 
 using namespace DirectX;
 
-class MaterialData
+class MaterialLoaderData
 {
 public:
-	D3DCOLORVALUE ambient;
-	D3DCOLORVALUE diffuse;
-	D3DCOLORVALUE specular;
-	D3DCOLORVALUE emissive;
-	float dissolve;
-	float specularPower;
+	XMFLOAT4 ambient;
+	XMFLOAT4 diffuse;
+	XMFLOAT4 specular;
+	XMFLOAT4 emissive;
+	FLOAT dissolve;
+	FLOAT specularPower;
 
 	std::wstring textureFileName;
 };

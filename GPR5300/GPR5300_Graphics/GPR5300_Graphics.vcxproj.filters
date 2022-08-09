@@ -52,6 +52,12 @@
     <Filter Include="Source Files\Loaders">
       <UniqueIdentifier>{e70716d2-6496-4754-a431-2773e96b82e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Materials">
+      <UniqueIdentifier>{5ac5309c-7529-4aea-9f1e-7f944def9686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Materials">
+      <UniqueIdentifier>{0bf3509a-c037-4759-98af-00a7406f956d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IUpdateable.h">
@@ -87,14 +93,8 @@
     <ClCompile Include="Vector3.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Rotator.cpp">
       <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshData.cpp">
-      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="PlayerController.cpp">
       <Filter>Source Files\Components</Filter>
@@ -114,9 +114,6 @@
     <ClCompile Include="MeshLoader.cpp">
       <Filter>Source Files\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="Math.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
@@ -126,8 +123,32 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBoxMaterial.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
     <ClCompile Include="SkyBox.cpp">
-      <Filter>Source Files\Objects</Filter>
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterMaterial.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoaderData.cpp">
+      <Filter>Source Files\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshGenerator.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,20 +188,11 @@
     <ClInclude Include="Vector3.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Space.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Rotator.h">
       <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialData.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshData.h">
-      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="PlayerController.h">
       <Filter>Header Files\Components</Filter>
@@ -203,26 +215,47 @@
     <ClInclude Include="WICTextureLoader11.h">
       <Filter>Header Files\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxMaterial.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
     <ClInclude Include="SkyBox.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterMaterial.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLoaderData.h">
+      <Filter>Header Files\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoaderData.h">
+      <Filter>Header Files\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshGenerator.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ColorVertexShader.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorPixelShader.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
     <FxCompile Include="LightVertexShader.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
@@ -239,6 +272,18 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="SkyBoxPixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="BasePixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="BaseVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterVertexShader.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>

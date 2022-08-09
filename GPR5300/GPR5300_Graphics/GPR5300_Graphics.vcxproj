@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="IUpdateable.h" />
     <ClCompile Include="Light.cpp" />
@@ -154,19 +155,23 @@
     <ClCompile Include="MaterialLoader.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshData.cpp" />
+    <ClCompile Include="MeshLoaderData.cpp" />
+    <ClCompile Include="MeshGenerator.cpp" />
     <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="SkyBoxMaterial.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="WaterMaterial.cpp" />
     <ClCompile Include="WICTextureLoader11.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -174,16 +179,21 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="D3D.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MaterialData.h" />
+    <ClInclude Include="MaterialLoaderData.h" />
     <ClInclude Include="MaterialLoader.h" />
     <ClInclude Include="Math.h" />
-    <ClInclude Include="MeshData.h" />
+    <ClInclude Include="MeshGenerator.h" />
+    <ClInclude Include="MeshLoaderData.h" />
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Shaders.h" />
     <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="SkyBoxMaterial.h" />
     <ClInclude Include="Space.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="Material.h" />
@@ -197,11 +207,12 @@
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="WaterMaterial.h" />
     <ClInclude Include="WICTextureLoader11.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ColorPixelShader.hlsl">
+    <FxCompile Include="BasePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -211,7 +222,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="ColorVertexShader.hlsl">
+    <FxCompile Include="BaseVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -280,6 +291,18 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="WaterVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

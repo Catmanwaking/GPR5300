@@ -7,12 +7,12 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, int nCmdShow)
 {
-	UINT width = 1080;
-	UINT height = 720;
-	BOOL windowed = false;
+	BOOL windowed = true;
+	UINT width = windowed ? 1080 : GetSystemMetrics(SM_CXSCREEN);
+	UINT height = windowed ? 720 : GetSystemMetrics(SM_CYSCREEN);
 
 	Window window = {};	
-	INT error = window.Init(hInstance, width, height);
+	INT error = window.Init(hInstance, width, height, windowed);
 	if (error != 0) return error;
 
 	D3D d3d = {};
@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, in
 	if (error != 0) return error;
 
 	Scene scene = {};
-	error = scene.Init(d3d.GetDevice(), d3d.GetDeviceContext(), width, height);
+	error = scene.Init(d3d.GetDevice(), d3d.GetDeviceContext(), d3d.GetDepthStencilView(), width, height);
 	if (error != 0) return error;
 
 	while (window.Run())

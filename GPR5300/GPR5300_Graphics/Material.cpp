@@ -3,19 +3,17 @@
 #include <xutility>
 #include "WICTextureLoader11.h"
 #include "Utils.h"
-#include "MaterialData.h"
+#include "MaterialLoaderData.h"
 #include "MaterialLoader.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-using namespace DirectX;
-
-INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName)
+INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName, Shader shader)
 {
-	INT error = InitVertexShader(pD3DDevice);
+	INT error = InitVertexShader(pD3DDevice, shader);
 	if (error) return error;
 
-	error = InitPixelShader(pD3DDevice);
+	error = InitPixelShader(pD3DDevice, shader);
 	if (error) return error;
 
 	error = InitMatrixBuffer(pD3DDevice);
@@ -31,11 +29,11 @@ void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rT
 {
 	if (pTexture == nullptr) return;
 
-	pD3DDeviceContext->IASetInputLayout(pInputLayout);
 	pD3DDeviceContext->VSSetShader(pVertexShader, nullptr, 0);
 	pD3DDeviceContext->PSSetShader(pPixelShader, nullptr, 0);
 
 	SetMatrixBuffer(pD3DDeviceContext, rTransformationMatrix, rViewProjectionMatrix);
+	pD3DDeviceContext->PSSetConstantBuffers(1, 1, &pMaterialBuffer);
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
 	pD3DDeviceContext->PSSetSamplers(0, 1, &pSamplerState);
 }
@@ -50,12 +48,12 @@ void Material::DeInit()
 	SafeRelease<ID3D11VertexShader>(pVertexShader);
 }
 
-INT Material::InitVertexShader(ID3D11Device* pD3DDevice)
+INT Material::InitVertexShader(ID3D11Device* pD3DDevice, Shader shader)
 {
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	hr = D3DReadFileToBlob(TEXT("LightVertexShader.cso"), &pCompiledShaderCode);
+	hr = D3DReadFileToBlob(vertexShaders[shader], &pCompiledShaderCode);
 	if (FAILED(hr)) return 50;
 
 	hr = pD3DDevice->CreateVertexShader
@@ -67,20 +65,17 @@ INT Material::InitVertexShader(ID3D11Device* pD3DDevice)
 	);
 	if (FAILED(hr)) return 52;
 
-	UINT error = InitInputLayot(pD3DDevice, pCompiledShaderCode);
-	if (error) return error;
-
 	SafeRelease<ID3DBlob>(pCompiledShaderCode);
 
 	return 0;
 }
 
-INT Material::InitPixelShader(ID3D11Device* pD3DDevice)
+INT Material::InitPixelShader(ID3D11Device* pD3DDevice, Shader shader)
 {
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	hr = D3DReadFileToBlob(TEXT("LightPixelShader.cso"), &pCompiledShaderCode);
+	hr = D3DReadFileToBlob(pixelShaders[shader], &pCompiledShaderCode);
 	if (FAILED(hr)) return 54;
 
 	hr = pD3DDevice->CreatePixelShader
@@ -93,39 +88,6 @@ INT Material::InitPixelShader(ID3D11Device* pD3DDevice)
 	if (FAILED(hr)) return 56;
 
 	SafeRelease<ID3DBlob>(pCompiledShaderCode);
-
-	return 0;
-}
-
-INT Material::InitInputLayot(ID3D11Device* pD3DDevice, ID3DBlob* pCompiledShaderCode)
-{
-	D3D11_INPUT_ELEMENT_DESC elementDescription[4] = {}; //TODO INPUT LAYOUT DOESN'T CHANGE -> unify
-
-	elementDescription[0].SemanticName = "POSITION";
-	elementDescription[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-
-	elementDescription[1].SemanticName = "NORMAL";
-	elementDescription[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	elementDescription[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-
-	elementDescription[2].SemanticName = "TEXCOORD";
-	elementDescription[2].Format = DXGI_FORMAT_R32G32_FLOAT;
-	elementDescription[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-
-	elementDescription[3].SemanticName = "COLOR";
-	elementDescription[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	elementDescription[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-
-	HRESULT hr = pD3DDevice->CreateInputLayout
-	(
-		elementDescription,
-		std::size(elementDescription),
-		pCompiledShaderCode->GetBufferPointer(),
-		pCompiledShaderCode->GetBufferSize(),
-		&pInputLayout
-	);
-
-	if (FAILED(hr)) return 58;
 
 	return 0;
 }
@@ -144,9 +106,37 @@ INT Material::InitMatrixBuffer(ID3D11Device* pD3DDevice)
 	return 0;
 }
 
+INT Material::InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData)
+{
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.ByteWidth = sizeof(MatrixBuffer);
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+
+	MaterialData* pMaterial = new MaterialData;
+	pMaterial->ambientColor = pMaterialData->ambient;
+	pMaterial->diffuseColor = pMaterialData->diffuse;
+	pMaterial->specularColor = pMaterialData->specular;
+	pMaterial->emissiveColor = pMaterialData->emissive;
+	pMaterial->specularPower = pMaterialData->specularPower;
+	pMaterial->dissolve = pMaterialData->dissolve;
+
+	D3D11_SUBRESOURCE_DATA subResourceData = {};
+	subResourceData.pSysMem = pMaterial;
+
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pMaterialBuffer);
+	if (FAILED(hr)) return 30;
+
+	return 0;
+}
+
 INT Material::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName)
 {
-	MaterialData* pMaterialData = MaterialLoader::LoadFromFile(materialName);
+	if (materialName == "")
+		materialName = "Default.mtl";
+		
+	MaterialLoaderData* pMaterialData = MaterialLoader::LoadFromFile(materialName);
+	InitMaterialBuffer(pD3DDevice, pMaterialData);
 
 	HRESULT hr = CreateWICTextureFromFile(pD3DDevice, pMaterialData->textureFileName.c_str(), nullptr, &pTexture);
 	if (FAILED(hr)) return 53;
