@@ -114,10 +114,6 @@ INT Material::InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* p
 	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 
 	MaterialData* pMaterial = new MaterialData;
-	pMaterial->ambientColor = pMaterialData->ambient;
-	pMaterial->diffuseColor = pMaterialData->diffuse;
-	pMaterial->specularColor = pMaterialData->specular;
-	pMaterial->emissiveColor = pMaterialData->emissive;
 	pMaterial->specularPower = pMaterialData->specularPower;
 	pMaterial->dissolve = pMaterialData->dissolve;
 

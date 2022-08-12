@@ -15,10 +15,6 @@ struct MatrixBuffer
 
 struct MaterialData
 {
-	XMFLOAT4 ambientColor;
-	XMFLOAT4 diffuseColor;
-	XMFLOAT4 specularColor;
-	XMFLOAT4 emissiveColor;
 	FLOAT dissolve;
 	FLOAT specularPower;
 };

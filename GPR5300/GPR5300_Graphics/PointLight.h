@@ -8,6 +8,10 @@ struct PointLightData
 	XMFLOAT3 position;
 	FLOAT intensity;
 	XMFLOAT4 color;
+	FLOAT constantAttenuation;
+	FLOAT linearAttenuation;
+	FLOAT quadraticAttenuation;
+	FLOAT maxDist;
 };
 
 class PointLight : public Component, public IUpdateable

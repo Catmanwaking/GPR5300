@@ -15,7 +15,7 @@ MeshLoaderData* MeshGenerator::GenerateShape(Shape shape)
     case Icosahedron:
         return GenerateIcosahedron();
     case IcoSpehre:
-        return GenerateIcoSpehre(5);
+        return GenerateIcoSpehre(3);
     default:
         return nullptr;
     }

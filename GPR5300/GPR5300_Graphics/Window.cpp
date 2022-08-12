@@ -62,9 +62,6 @@ void Window::DeInit()
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	FLOAT x = 0.0f;
-	FLOAT y = 0.0f;
-
 	switch (msg)
 	{
 	case WM_CLOSE:

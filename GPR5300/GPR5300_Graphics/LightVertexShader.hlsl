@@ -22,6 +22,7 @@ struct VertexOutput
     float4 position : SV_POSITION;
     float3 normal : NORMAL0;
     float2 uv : TEXCOORD0;
+    float3 worldPos : POSITION;
     float3 viewDir : NORMAL1;
 };
 
@@ -32,9 +33,8 @@ VertexOutput main(VertexInput INPUT)
     OUTPUT.position = mul(float4(INPUT.position, 1.0f), worldViewProjectionMatrix);
     OUTPUT.normal = normalize(mul(INPUT.normal, (float3x3) worldMatrix));
     OUTPUT.uv = INPUT.uv;
-    
-    float3 worldPos = mul(INPUT.position, (float3x3) worldMatrix);
-    OUTPUT.viewDir = normalize(cameraPosition - worldPos);
+    OUTPUT.worldPos = mul(INPUT.position, (float3x3) worldMatrix);   
+    OUTPUT.viewDir = normalize(cameraPosition - OUTPUT.worldPos);
     
     return OUTPUT;
 }

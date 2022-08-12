@@ -10,6 +10,7 @@ struct LightData
 {
 	DirLightData dirLightBuffer; //size 48 byte all aligned
 	PointLightData pointLight[8]; //size 48 * 8 byte all aligned
+	XMFLOAT4 ambientLight;
 	UINT pointLightCount; //4byte
 	XMFLOAT3 padding;
 };
@@ -27,6 +28,7 @@ public:
 private:
 	DirectionalLight* pDirLight = {};
 	PointLight* pPointLights[8];
+	XMFLOAT4 ambientLight = {};
 	UINT pointLightCount = 0;
 
 	ID3D11Buffer* pLightBuffer = nullptr;

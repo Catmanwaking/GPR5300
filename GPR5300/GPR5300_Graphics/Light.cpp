@@ -12,6 +12,8 @@ INT Light::Init(ID3D11Device* pD3DDevice)
     HRESULT hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pLightBuffer);
     if (FAILED(hr)) return 70;
 
+    ambientLight = { 0.3f, 0.3f, 0.3f, 1.0f };
+
     return 0;
 }
 
@@ -28,6 +30,7 @@ void Light::Render(ID3D11DeviceContext* pD3DDeviceContext)
     {
         lightBuffer->pointLight[i] = pPointLights[i]->GetBuffer();
     }
+    lightBuffer->ambientLight = ambientLight;
     lightBuffer->pointLightCount = pointLightCount;
 
     pD3DDeviceContext->Unmap(pLightBuffer, 0);
