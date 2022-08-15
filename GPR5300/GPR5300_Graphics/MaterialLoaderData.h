@@ -17,5 +17,6 @@ public:
 	FLOAT specularPower;
 
 	std::wstring textureFileName;
+	std::wstring normalMapFileName;
 };
 

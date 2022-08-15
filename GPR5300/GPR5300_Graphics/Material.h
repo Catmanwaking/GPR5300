@@ -42,5 +42,6 @@ protected:
 	ID3D11Buffer* pMaterialBuffer = nullptr;
 
 	ID3D11ShaderResourceView* pTexture = nullptr;
+	ID3D11ShaderResourceView* pNormalMap = nullptr;
 	ID3D11SamplerState* pSamplerState = nullptr;
 };

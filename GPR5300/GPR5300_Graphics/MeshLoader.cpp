@@ -17,6 +17,7 @@ MeshLoaderData* MeshLoader::LoadFromFile(string fileName)
 		ParseLine(token);
 
 	BuildVertices();
+	CalculateTangentAndBiNormal();
 
 	return data;
 }

@@ -5,22 +5,25 @@ namespace Shaders
 {
 	enum Shader
 	{
-		LightShader = 0,
-		SkyboxShader,
-		BrokenTextureShader
+		Matte = 0,
+		Glossy,
+		NormalMapped,
+		Skybox,
 	};
 
-	const LPCWSTR vertexShaders[3] =
+	const LPCWSTR vertexShaders[4] =
 	{
-		TEXT("LightVertexShader.cso"),
-		TEXT("SkyboxVertexShader.cso"),
-		TEXT("TextureVertexShader.cso")
+		TEXT("MatteVertexShader.cso"),
+		TEXT("GlossyVertexShader.cso"),
+		TEXT("NormalMapVertexShader.cso"),
+		TEXT("SkyboxVertexShader.cso")
 	};
 
-	const LPCWSTR pixelShaders[3] =
+	const LPCWSTR pixelShaders[4] =
 	{
-		TEXT("LightPixelShader.cso"),
-		TEXT("SkyboxPixelShader.cso"),
-		TEXT("TexturePixelShader.cso")
+		TEXT("MattePixelShader.cso"),
+		TEXT("GlossyPixelShader.cso"),
+		TEXT("NormalMapPixelShader.cso"),
+		TEXT("SkyboxPixelShader.cso")
 	};
 }

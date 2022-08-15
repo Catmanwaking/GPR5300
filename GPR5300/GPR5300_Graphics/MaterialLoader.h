@@ -20,6 +20,7 @@ private:
 	static void ParseSpecularExponent(string line);
 	static void ParseDissolve(string line);
 	static void ParseTexture(string line);
+	static void ParseNormalMap(string line);
 
 	static MaterialLoaderData* data;
 };

@@ -26,6 +26,7 @@ void MaterialLoader::ParseLine(string line)
     else if (line.substr(0, 2) == "Ns") ParseSpecularExponent(line);
     else if (line.substr(0, 2) == "d ") ParseDissolve(line);
     else if (line.substr(0, 6) == "map_Kd") ParseTexture(line);
+    else if (line.substr(0, 4) == "norm") ParseNormalMap(line);
 }
 
 void MaterialLoader::ParseAmbient(string line)
@@ -103,4 +104,15 @@ void MaterialLoader::ParseTexture(string line)
     textureName = "Models/Images/" + textureName;
 
     data->textureFileName = wstring(textureName.begin(), textureName.end());
+}
+
+void MaterialLoader::ParseNormalMap(string line)
+{
+    string prefix, textureName;
+    istringstream s(line);
+    s >> prefix >> textureName;
+
+    textureName = "Models/Images/" + textureName;
+
+    data->normalMapFileName = wstring(textureName.begin(), textureName.end());
 }

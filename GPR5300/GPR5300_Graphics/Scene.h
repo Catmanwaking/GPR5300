@@ -36,8 +36,8 @@ private:
 	INT AddMeshes(ID3D11Device* pD3DDevice);
 
 	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height, std::string skyBoxName);
-	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path);
-	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path, Shader shader);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader);
 	INT AddMover(GameObject* go, Vector3 movement);
 	INT AddRotator(GameObject* go, Vector3 rotation);
 	INT AddPlayerController(GameObject* go);

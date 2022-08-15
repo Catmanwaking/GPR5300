@@ -85,7 +85,7 @@ INT Scene::AddLights(ID3D11Device* pD3DDevice)
 	go = new GameObject;
 	PointLightData pointLightData = {};
 	pointLightData.color = { 0.9843f, 0.2824f, 0.7686, 1.0f };
-	pointLightData.intensity = 1.0f;
+	pointLightData.intensity = 2.0f;
 	pointLightData.constantAttenuation = 1.0f;
 	pointLightData.linearAttenuation = 0.14f;
 	pointLightData.quadraticAttenuation = 0.07f;
@@ -93,9 +93,10 @@ INT Scene::AddLights(ID3D11Device* pD3DDevice)
 	AddPointLight(go, pointLightData);
 	AddRotator(go, Vector3(0.0f, 30.0f * toRadian,0.0f));
 	AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
-	AddMesh(go, pD3DDevice, MeshGenerator::Shape::IcoSpehre);
-	go->transform.position = Vector3(2.0f, 0.0f, 0.0f);
+	AddMesh(go, pD3DDevice, MeshGenerator::Shape::IcoSpehre, Shader::Matte);
+	go->transform.position = Vector3(5.0f, 0.0f, 0.0f);
 	go->transform.rotation = Quaternion(Vector3(0.0f, 90.0f * toRadian, 0.0f));
+	go->transform.scale = Vector3(0.2f, 0.2f, 0.2f);
 
 	return 0;
 }
@@ -103,16 +104,20 @@ INT Scene::AddLights(ID3D11Device* pD3DDevice)
 INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 {
 	GameObject* go = new GameObject;
-	//AddMesh(go, pD3DDevice, "Cube");
-	//AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
-	//AddMover(go, Vector3(3.0f, 0.0f, 0.0f));
-	//gameObjects.push_back(go);
-	//go->transform.rotation = Quaternion(Vector3(0.0f, 0.0f, XM_PIDIV4));
+	AddMesh(go, pD3DDevice, "Cube", Shader::Matte);
+	AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
+	gameObjects.push_back(go);
+	go->transform.rotation = Quaternion(Vector3(0.0f, 0.0f, XM_PIDIV4));
+	go->transform.position = Vector3(0.0f, 4.0f, 0.0f);
 
 	//go = new GameObject;
-	AddMesh(go, pD3DDevice, MeshGenerator::Shape::IcoSpehre);
-	gameObjects.push_back(go);
+	//AddMesh(go, pD3DDevice, MeshGenerator::Shape::IcoSpehre, Shader::Matte);
+	//gameObjects.push_back(go);
 	//go->transform.position = Vector3(4.0f, 0.0f, 0.0f);
+
+	go = new GameObject;
+	AddMesh(go, pD3DDevice, "BrickWall", Shader::NormalMapped);
+	gameObjects.push_back(go);
 
 	return 0;
 }
@@ -120,7 +125,7 @@ INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height, std::string skyBoxName)
 {
 	Camera* pCamera = new Camera;
-	INT error = pCamera->Init(pD3DDevice, pDepthStencilView, width, height, skyBoxName, Shader::SkyboxShader);
+	INT error = pCamera->Init(pD3DDevice, pDepthStencilView, width, height, skyBoxName, Shader::Skybox);
 	if (error) return error;
 	mainCam = pCamera;
 	go->AddComponent(pCamera);
@@ -128,10 +133,10 @@ INT Scene::AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStenci
 	return 0;
 }
 
-INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path)
+INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path, Shader shader)
 {
 	Mesh* pMesh = new Mesh;
-	INT error = pMesh->Init(pD3DDevice, path, Shader::LightShader);
+	INT error = pMesh->Init(pD3DDevice, path, shader);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
 	go->AddComponent(pMesh);
@@ -139,10 +144,10 @@ INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path)
 	return 0;
 }
 
-INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape)
+INT Scene::AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader)
 {
 	Mesh* pMesh = new Mesh;
-	INT error = pMesh->Init(pD3DDevice, shape, Shader::LightShader);
+	INT error = pMesh->Init(pD3DDevice, shape, shader);
 	if (error) return error;
 	renderables.push_back(dynamic_cast<IRenderable*>(pMesh));
 	go->AddComponent(pMesh);

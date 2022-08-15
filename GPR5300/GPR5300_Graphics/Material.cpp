@@ -27,14 +27,15 @@ INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName, Shader sh
 
 void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix)
 {
-	if (pTexture == nullptr) return;
-
 	pD3DDeviceContext->VSSetShader(pVertexShader, nullptr, 0);
 	pD3DDeviceContext->PSSetShader(pPixelShader, nullptr, 0);
 
 	SetMatrixBuffer(pD3DDeviceContext, rTransformationMatrix, rViewProjectionMatrix);
 	pD3DDeviceContext->PSSetConstantBuffers(1, 1, &pMaterialBuffer);
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
+	if(pNormalMap != nullptr)
+		pD3DDeviceContext->PSSetShaderResources(1, 1, &pNormalMap);
+
 	pD3DDeviceContext->PSSetSamplers(0, 1, &pSamplerState);
 }
 
@@ -53,6 +54,7 @@ INT Material::InitVertexShader(ID3D11Device* pD3DDevice, Shader shader)
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
+	LPCWSTR path = vertexShaders[shader];
 	hr = D3DReadFileToBlob(vertexShaders[shader], &pCompiledShaderCode);
 	if (FAILED(hr)) return 50;
 
@@ -135,6 +137,10 @@ INT Material::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string m
 	InitMaterialBuffer(pD3DDevice, pMaterialData);
 
 	HRESULT hr = CreateWICTextureFromFile(pD3DDevice, pMaterialData->textureFileName.c_str(), nullptr, &pTexture);
+	if (FAILED(hr)) return 53;
+
+	if(pMaterialData->normalMapFileName != L"")
+		hr = CreateWICTextureFromFile(pD3DDevice, pMaterialData->normalMapFileName.c_str(), nullptr, &pNormalMap);
 	if (FAILED(hr)) return 53;
 
 	D3D11_SAMPLER_DESC desc = {};
