@@ -75,7 +75,6 @@ void MeshLoader::ParseVertexNormal(string line)
 
 void MeshLoader::ParseFace(string line)
 {
-	//TODO test with tri
 	string prefix, face1, face2, face3, face4;
 
 	istringstream s(line);
@@ -86,6 +85,7 @@ void MeshLoader::ParseFace(string line)
 	ParseIndices(face3);
 	if (face4 != "")
 	{
+		data->usesQuads = true;
 		data->indices->push_back(currentIndex - 3);
 		data->indices->push_back(currentIndex - 1);
 		ParseIndices(face4);
@@ -131,7 +131,9 @@ void MeshLoader::BuildVertices()
 
 void MeshLoader::CalculateTangentAndBiNormal()
 {
-	for (int i = 0; i < data->vertices->size(); i += 3)
+	int increase = data->usesQuads ? 4 : 3;
+
+	for (int i = 0; i < data->vertices->size(); i += increase)
 	{
 		float position1[3], position2[3];
 		float tuVector[2], tvVector[2];
@@ -182,5 +184,11 @@ void MeshLoader::CalculateTangentAndBiNormal()
 		data->vertices->at(i).binormal = bitangent;
 		data->vertices->at(i + 1).binormal = bitangent;
 		data->vertices->at(i + 2).binormal = bitangent;
+
+		if (data->usesQuads)
+		{
+			data->vertices->at(i + 3).tangent = tangent;
+			data->vertices->at(i + 3).binormal = bitangent;
+		}
 	}
 }

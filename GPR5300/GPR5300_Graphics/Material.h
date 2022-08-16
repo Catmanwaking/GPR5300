@@ -32,8 +32,10 @@ protected:
 	INT InitMatrixBuffer(ID3D11Device* pD3DDevice);
 	INT InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData);
 	INT InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName);
+	virtual INT InitAdditionalBuffers(ID3D11Device* pD3DDevice) { return 0; }
 
 	virtual void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	virtual void SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext) {}
 
 	ID3D11VertexShader* pVertexShader = nullptr;
 	ID3D11PixelShader* pPixelShader = nullptr;

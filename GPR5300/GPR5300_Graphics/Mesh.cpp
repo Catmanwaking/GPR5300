@@ -15,7 +15,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+	error = InitMaterial(pD3DDevice, shader);
 	if (error) return error;
 
 	pMeshData->DeInit();
@@ -94,5 +94,22 @@ INT Mesh::InitIndexBuffer(ID3D11Device* pD3DDevice)
 	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pIndexBuffer);
 	if (FAILED(hr)) return 32;
 
+	return 0;
+}
+
+INT Mesh::InitMaterial(ID3D11Device* pD3DDevice, Shader shader)
+{
+	INT error = 0;
+	switch (shader)
+	{
+	case Shaders::Water:
+		error = dynamic_cast<WaterMaterial*>(&material)->Init(pD3DDevice, pMeshData->materialFileName, shader);
+		break;
+	default:
+		error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+		break;
+	}
+
+	if (error) return error;
 	return 0;
 }

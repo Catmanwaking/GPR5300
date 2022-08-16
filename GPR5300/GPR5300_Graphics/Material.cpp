@@ -19,6 +19,9 @@ INT Material::Init(ID3D11Device* pD3DDevice, std::string materialName, Shader sh
 	error = InitMatrixBuffer(pD3DDevice);
 	if (error) return error;
 
+	error = InitAdditionalBuffers(pD3DDevice);
+	if (error) return error;
+
 	error = InitTextureAndSamplerState(pD3DDevice, materialName);
 	if (error) return error;
 
@@ -31,6 +34,7 @@ void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rT
 	pD3DDeviceContext->PSSetShader(pPixelShader, nullptr, 0);
 
 	SetMatrixBuffer(pD3DDeviceContext, rTransformationMatrix, rViewProjectionMatrix);
+	SetAdditionalBuffers(pD3DDeviceContext);
 	pD3DDeviceContext->PSSetConstantBuffers(1, 1, &pMaterialBuffer);
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
 	if(pNormalMap != nullptr)
@@ -111,7 +115,7 @@ INT Material::InitMatrixBuffer(ID3D11Device* pD3DDevice)
 INT Material::InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData)
 {
 	D3D11_BUFFER_DESC bufferDesc = {};
-	bufferDesc.ByteWidth = sizeof(MatrixBuffer);
+	bufferDesc.ByteWidth = sizeof(MaterialData);
 	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 

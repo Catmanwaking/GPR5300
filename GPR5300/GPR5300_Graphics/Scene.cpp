@@ -103,6 +103,7 @@ INT Scene::AddLights(ID3D11Device* pD3DDevice)
 
 INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 {
+	//Opaque
 	GameObject* go = new GameObject;
 	AddMesh(go, pD3DDevice, "Cube", Shader::Matte);
 	AddRotator(go, Vector3(30.0f * toRadian, 0.0f,0.0f));
@@ -118,6 +119,13 @@ INT Scene::AddMeshes(ID3D11Device* pD3DDevice)
 	go = new GameObject;
 	AddMesh(go, pD3DDevice, "BrickWall", Shader::NormalMapped);
 	gameObjects.push_back(go);
+
+	go = new GameObject;
+	AddMesh(go, pD3DDevice, "Water", Shader::Water);
+	gameObjects.push_back(go);
+	go->transform.position = Vector3(-10.0f, 0.0f, 0.0f);
+
+	//transparent
 
 	return 0;
 }

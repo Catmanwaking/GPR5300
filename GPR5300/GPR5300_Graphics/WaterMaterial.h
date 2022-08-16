@@ -8,10 +8,19 @@
 using namespace DirectX;
 using namespace Shaders;
 
-struct CameraBuffer
+struct TilingOffsetData
 {
-	XMFLOAT3 cameraPosition;
-	FLOAT padding;
+	XMFLOAT2 tiling;
+	XMFLOAT2 offset;
+};
+
+struct WaterData
+{
+	XMFLOAT4 mainColor;
+	XMFLOAT4 sideColor;
+    float fresnelPower;
+    float fresnelMult;
+	XMFLOAT2 padding;
 };
 
 class WaterMaterial : public Material
@@ -21,6 +30,10 @@ public:
 	virtual void DeInit();
 
 protected:
-	virtual void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	virtual INT InitAdditionalBuffers(ID3D11Device* pD3DDevice);
+	virtual void SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext);
+
+	ID3D11Buffer* pTilingOffsetBuffer = nullptr;
+	ID3D11Buffer* pWaterBuffer = nullptr;
 };
 

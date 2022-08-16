@@ -23,6 +23,8 @@ public:
 
 	std::string materialFileName = {};
 
+	BOOL usesQuads = false;
+
 	void Init();
 	void DeInit();
 };

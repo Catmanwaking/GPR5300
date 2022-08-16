@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "Material.h"
+#include "WaterMaterial.h"
 #include "MeshLoaderData.h"
 #include "Shaders.h"
 #include "MeshGenerator.h"
@@ -22,6 +23,7 @@ public:
 protected:
 	INT InitVertexBuffer(ID3D11Device* pD3DDevice);
 	INT InitIndexBuffer(ID3D11Device* pD3DDevice);
+	INT InitMaterial(ID3D11Device* pD3DDevice, Shader shader);
 
 	ID3D11Buffer* pVertexBuffer = nullptr;
 	ID3D11Buffer* pIndexBuffer = nullptr;
