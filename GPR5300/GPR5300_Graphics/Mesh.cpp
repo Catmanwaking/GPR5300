@@ -15,7 +15,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = InitMaterial(pD3DDevice, shader);
+	error = material->Init(pD3DDevice, pMeshData->materialFileName, shader);
 	if (error) return error;
 
 	pMeshData->DeInit();
@@ -34,7 +34,8 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shad
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+	material = new Material;
+	error = material->Init(pD3DDevice, pMeshData->materialFileName, shader);
 	if (error) return error;
 
 	pMeshData->DeInit();
@@ -45,7 +46,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shad
 
 void Mesh::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rViewProjectionMatrix)
 {
-	material.Render(pD3DDeviceContext, pTransform->GetTransformationMatrix(), rViewProjectionMatrix);
+	material->Render(pD3DDeviceContext, pTransform->GetTransformationMatrix(), rViewProjectionMatrix);
 
 	static UINT offset = 0;
 	pD3DDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &vertexStride, &offset);
@@ -94,22 +95,5 @@ INT Mesh::InitIndexBuffer(ID3D11Device* pD3DDevice)
 	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pIndexBuffer);
 	if (FAILED(hr)) return 32;
 
-	return 0;
-}
-
-INT Mesh::InitMaterial(ID3D11Device* pD3DDevice, Shader shader)
-{
-	INT error = 0;
-	switch (shader)
-	{
-	case Shaders::Water:
-		error = dynamic_cast<WaterMaterial*>(&material)->Init(pD3DDevice, pMeshData->materialFileName, shader);
-		break;
-	default:
-		error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
-		break;
-	}
-
-	if (error) return error;
 	return 0;
 }

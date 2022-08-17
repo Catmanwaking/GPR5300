@@ -30,7 +30,7 @@ public:
 	virtual void DeInit();
 
 protected:
-	virtual INT InitAdditionalBuffers(ID3D11Device* pD3DDevice);
+	INT InitAdditionalBuffers(ID3D11Device* pD3DDevice) override;
 	virtual void SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext);
 
 	ID3D11Buffer* pTilingOffsetBuffer = nullptr;

@@ -15,16 +15,25 @@ struct MatrixBuffer
 
 struct MaterialData
 {
-	FLOAT dissolve;
-	FLOAT specularPower;
+	float dissolve;
+	float specularPower;
+	XMFLOAT2 padding;
+};
+
+struct AdditionalData
+{
+	XMFLOAT4 data1;
+	XMFLOAT4 data2;
+	XMFLOAT4 data3;
+	XMFLOAT4 data4;
 };
 
 class Material
 {
 public:
 	INT Init(ID3D11Device* pD3DDevice, std::string materialName, Shader shader);
-	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
-	virtual void DeInit();
+	void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	void DeInit();
 
 protected:
 	INT InitVertexShader(ID3D11Device* pD3DDevice, Shader shader);
@@ -32,18 +41,22 @@ protected:
 	INT InitMatrixBuffer(ID3D11Device* pD3DDevice);
 	INT InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData);
 	INT InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName);
-	virtual INT InitAdditionalBuffers(ID3D11Device* pD3DDevice) { return 0; }
+	INT InitAdditionalBuffers(ID3D11Device* pD3DDevice);
 
-	virtual void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
-	virtual void SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext) {}
+	void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
+	void SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext);
 
 	ID3D11VertexShader* pVertexShader = nullptr;
 	ID3D11PixelShader* pPixelShader = nullptr;
-	ID3D11InputLayout* pInputLayout = nullptr;
-	ID3D11Buffer* pMatrixBuffer = nullptr;
-	ID3D11Buffer* pMaterialBuffer = nullptr;
+	ID3D11Buffer* pVSMatrixBuffer = nullptr;
+	ID3D11Buffer* pPSMaterialBuffer = nullptr;
+	ID3D11Buffer* pVSAdditionalBuffer = nullptr;
+	ID3D11Buffer* pPSAdditionalBuffer = nullptr;
 
 	ID3D11ShaderResourceView* pTexture = nullptr;
 	ID3D11ShaderResourceView* pNormalMap = nullptr;
 	ID3D11SamplerState* pSamplerState = nullptr;
+
+	AdditionalData* pVSData = nullptr;
+	AdditionalData* pPSData = nullptr;
 };

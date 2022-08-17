@@ -11,7 +11,7 @@ INT PlayerController::Init()
 	screenCenter.x = GetSystemMetrics(SM_CXSCREEN) >> 1;
 	screenCenter.y = GetSystemMetrics(SM_CYSCREEN) >> 1;
 
-	SetCursorPos(screenCenter.x, screenCenter.y);
+	//SetCursorPos(screenCenter.x, screenCenter.y);
 	ShowCursor(false);
 	return 0;
 }
@@ -61,5 +61,5 @@ void PlayerController::Rotate(FLOAT time)
 	camRotation.x = Math::Clamp(camRotation.x, -XM_PIDIV2, XM_PIDIV2);
 	pTransform->rotation = Quaternion(camRotation);
 
-	SetCursorPos(screenCenter.x, screenCenter.y);
+	//SetCursorPos(screenCenter.x, screenCenter.y);
 }

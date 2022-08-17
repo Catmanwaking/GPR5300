@@ -35,7 +35,7 @@ void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rT
 
 	SetMatrixBuffer(pD3DDeviceContext, rTransformationMatrix, rViewProjectionMatrix);
 	SetAdditionalBuffers(pD3DDeviceContext);
-	pD3DDeviceContext->PSSetConstantBuffers(1, 1, &pMaterialBuffer);
+	pD3DDeviceContext->PSSetConstantBuffers(1, 1, &pPSMaterialBuffer);
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
 	if(pNormalMap != nullptr)
 		pD3DDeviceContext->PSSetShaderResources(1, 1, &pNormalMap);
@@ -47,8 +47,10 @@ void Material::DeInit()
 {
 	SafeRelease<ID3D11SamplerState>(pSamplerState);
 	SafeRelease<ID3D11ShaderResourceView>(pTexture);
-	SafeRelease<ID3D11Buffer>(pMatrixBuffer);
-	SafeRelease<ID3D11InputLayout>(pInputLayout);
+	SafeRelease<ID3D11Buffer>(pVSMatrixBuffer);
+	SafeRelease<ID3D11Buffer>(pPSMaterialBuffer);
+	SafeRelease<ID3D11Buffer>(pVSAdditionalBuffer);
+	SafeRelease<ID3D11Buffer>(pPSAdditionalBuffer);
 	SafeRelease<ID3D11PixelShader>(pPixelShader);
 	SafeRelease<ID3D11VertexShader>(pVertexShader);
 }
@@ -106,7 +108,7 @@ INT Material::InitMatrixBuffer(ID3D11Device* pD3DDevice)
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	HRESULT hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pMatrixBuffer);
+	HRESULT hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pVSMatrixBuffer);
 	if (FAILED(hr)) return 51;
 
 	return 0;
@@ -117,7 +119,7 @@ INT Material::InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* p
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.ByteWidth = sizeof(MaterialData);
 	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
 	MaterialData* pMaterial = new MaterialData;
 	pMaterial->specularPower = pMaterialData->specularPower;
@@ -126,8 +128,9 @@ INT Material::InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* p
 	D3D11_SUBRESOURCE_DATA subResourceData = {};
 	subResourceData.pSysMem = pMaterial;
 
-	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pMaterialBuffer);
-	if (FAILED(hr)) return 30;
+	HRESULT hr = pD3DDevice->CreateBuffer(&bufferDesc, &subResourceData, &pPSMaterialBuffer);
+	if (FAILED(hr)) 
+		return 30;
 
 	return 0;
 }
@@ -161,12 +164,26 @@ INT Material::InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string m
 	return 0;
 }
 
+INT Material::InitAdditionalBuffers(ID3D11Device* pD3DDevice)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = sizeof(AdditionalData);
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	HRESULT hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pVSAdditionalBuffer);
+	hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pPSAdditionalBuffer);
+	if (FAILED(hr)) return 53;
+	return 0;
+}
+
 void Material::SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix)
 {
 	XMMATRIX worldViewProjectionMatrix = XMMatrixTranspose(rTransformationMatrix * rViewProjectionMatrix);
 
 	D3D11_MAPPED_SUBRESOURCE data = {};
-	HRESULT hr = pD3DDeviceContext->Map(pMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	HRESULT hr = pD3DDeviceContext->Map(pVSMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	if (FAILED(hr)) return;
 
 	MatrixBuffer* matrixBuffer = static_cast<MatrixBuffer*>(data.pData);
@@ -174,7 +191,27 @@ void Material::SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMM
 	XMStoreFloat4x4(&matrixBuffer->worldViewProjectionMatrix, worldViewProjectionMatrix);
 	XMStoreFloat4x4(&matrixBuffer->worldMatrix, XMMatrixTranspose(rTransformationMatrix));
 
-	pD3DDeviceContext->Unmap(pMatrixBuffer, 0);
+	pD3DDeviceContext->Unmap(pVSMatrixBuffer, 0);
 
-	pD3DDeviceContext->VSSetConstantBuffers(0, 1, &pMatrixBuffer);
+	pD3DDeviceContext->VSSetConstantBuffers(0, 1, &pVSMatrixBuffer);
+}
+
+void Material::SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext)
+{
+	D3D11_MAPPED_SUBRESOURCE data = {};
+	HRESULT hr = pD3DDeviceContext->Map(pVSAdditionalBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	if (FAILED(hr)) return;
+	AdditionalData* additionalData = static_cast<AdditionalData*>(data.pData);
+	additionalData = pVSData;
+	pD3DDeviceContext->Unmap(pVSAdditionalBuffer, 0);
+
+	data = {};
+	hr = pD3DDeviceContext->Map(pPSAdditionalBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	if (FAILED(hr)) return;
+	AdditionalData* additionalData = static_cast<AdditionalData*>(data.pData);
+	additionalData = pPSData;
+	pD3DDeviceContext->Unmap(pPSAdditionalBuffer, 0);
+
+	pD3DDeviceContext->VSSetConstantBuffers(2, 1, &pVSAdditionalBuffer);
+	pD3DDeviceContext->PSSetConstantBuffers(2, 1, &pVSAdditionalBuffer);
 }

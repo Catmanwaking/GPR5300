@@ -19,19 +19,20 @@ void WaterMaterial::DeInit()
 
 INT WaterMaterial::InitAdditionalBuffers(ID3D11Device* pD3DDevice)
 {
-	D3D11_BUFFER_DESC desc = {};
-	desc.ByteWidth = sizeof(TilingOffsetData);
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.Usage = D3D11_USAGE_DYNAMIC;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	D3D11_BUFFER_DESC desc1 = {};
+	desc1.ByteWidth = sizeof(TilingOffsetData);
+	desc1.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc1.Usage = D3D11_USAGE_DYNAMIC;
+	desc1.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	HRESULT hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pTilingOffsetBuffer);
-	if (FAILED(hr)) return 53;
+	HRESULT hr1 = pD3DDevice->CreateBuffer(&desc1, nullptr, &pTilingOffsetBuffer);
+	if (FAILED(hr1)) 
+		return 53;
 
-	desc = {};
-	desc.ByteWidth = sizeof(WaterData);
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	D3D11_BUFFER_DESC desc2 = {};
+	desc2.ByteWidth = sizeof(WaterData);
+	desc2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc2.Usage = D3D11_USAGE_DEFAULT;
 
 	WaterData* data = new WaterData;
 	data->mainColor = { 0.0f, 0.0f, 1.0f, 1.0f }; //TODO deep blue
@@ -42,8 +43,9 @@ INT WaterMaterial::InitAdditionalBuffers(ID3D11Device* pD3DDevice)
 	D3D11_SUBRESOURCE_DATA subResourceData = {};
 	subResourceData.pSysMem = data;
 
-	hr = pD3DDevice->CreateBuffer(&desc, nullptr, &pWaterBuffer);
-	if (FAILED(hr)) return 53;
+	HRESULT hr2 = pD3DDevice->CreateBuffer(&desc2, &subResourceData, &pWaterBuffer);
+	if (FAILED(hr2)) 
+		return 53;
 
 	return 0;
 }
