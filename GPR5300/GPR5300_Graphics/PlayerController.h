@@ -8,7 +8,9 @@
 class PlayerController : public Component, public IUpdateable
 {
 public:
+	//Initializes the PlayerController component
 	INT Init();
+	//Updates the GameObjects position and rotation based on mouse and keyboard inputs.
 	virtual void Update();
 	virtual void DeInit();
 
@@ -21,7 +23,9 @@ private:
 	POINT screenCenter = {};
 	Vector3 camRotation = {};
 
+	//Moves the GameObject based on keyboard inputs.
 	void Move(FLOAT time);
+	//Rotates the GameObject based on mouse inputs.
 	void Rotate(FLOAT time);
 };
 

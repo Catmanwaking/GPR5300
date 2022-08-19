@@ -9,9 +9,9 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-INT SkyBox::Init(ID3D11Device* pD3DDevice, std::string fileName, Shader shader)
+INT SkyBox::Init(ID3D11Device* pD3DDevice)
 {
-	pMeshData = MeshLoader::LoadFromFile(fileName);
+	pMeshData = MeshLoader::LoadFromFile("skybox");
 
 	INT error = InitVertexBuffer(pD3DDevice);
 	if (error) return error;
@@ -19,7 +19,7 @@ INT SkyBox::Init(ID3D11Device* pD3DDevice, std::string fileName, Shader shader)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
+	error = material.Init(pD3DDevice, pMeshData->materialFileName, Shader::Skybox);
 	if (error) return error;
 
 	pMeshData->DeInit();

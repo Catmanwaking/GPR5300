@@ -6,13 +6,14 @@ using namespace DirectX;
 
 namespace Constants
 {
-	const float toRadian = 0.0174532925f; //pi / 180
-	const float goldenRatio = 1.6180339887f; //(1.0 + Sqrt(5)) / 2.0
+	const float toRadian = XM_PI / 180.0f;
+	const float goldenRatio = (1.0f + sqrtf(5.0f)) / 2.0f;
 }
 
 class Math
 {
 public:
+	//Clamps the input between min and max.
 	static float Clamp(float value, float min, float max);
 };
 

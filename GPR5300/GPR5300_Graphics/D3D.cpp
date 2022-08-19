@@ -2,6 +2,7 @@
 #include <xutility>
 #include "D3D.h"
 #include "Utils.h"
+#include "Shaders.h"
 #include <vector>
 #include <d3dcompiler.h>
 
@@ -12,16 +13,12 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	INT error = 0;
 	DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;	
 
-	error = CreateSwapChain(hWnd, width, height, windowed, format);
-	if (error) return error;
-	error = CreateRenderTargetView();
-	if (error) return error;
-	error = CreateDepthStencilView(width, height);
-	if (error) return error;
-	error = CreateRasterizerState();
-	if (error) return error;
-	error = CreateInputLayout();
-	if (error) return error;
+	if (error = CreateSwapChain(hWnd, width, height, windowed, format)) return error;
+	if (error = CreateRenderTargetView()) return error;	
+	if (error = CreateDepthStencilView(width, height)) return error;	
+	if (error = CreateRasterizerState()) return error;
+	if (error = CreateBlendState()) return error;
+	if (error = CreateInputLayout()) return error;
 
 	D3D11_VIEWPORT viewPort = {};
 	viewPort.TopLeftX = 0;
@@ -34,6 +31,7 @@ INT D3D::Init(HWND hWnd, UINT width, UINT height, BOOL windowed)
 	pD3DDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 	pD3DDeviceContext->RSSetViewports(1, &viewPort);
 	pD3DDeviceContext->RSSetState(pRasterizerState);
+	pD3DDeviceContext->OMSetBlendState(pBlendState, nullptr, 0xffffffff);
 
 	return 0;
 }
@@ -42,6 +40,7 @@ void D3D::BeginScene()
 {
 	FLOAT backGround[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	pD3DDeviceContext->ClearRenderTargetView(pRenderTargetView, backGround);
+	pD3DDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0xff);
 	pD3DDeviceContext->IASetInputLayout(pInputLayout);
 }
 
@@ -53,6 +52,9 @@ void D3D::EndScene()
 void D3D::DeInit()
 {
 	SafeRelease<ID3D11InputLayout>(pInputLayout);
+	SafeRelease<ID3D11BlendState>(pBlendState);
+	SafeRelease<ID3D11RasterizerState>(pRasterizerState);
+	SafeRelease<ID3D11DepthStencilView>(pDepthStencilView);
 	SafeRelease<ID3D11RenderTargetView>(pRenderTargetView);
 	SafeRelease<IDXGISwapChain>(pSwapChain);
 	SafeRelease<ID3D11DeviceContext>(pD3DDeviceContext);
@@ -89,7 +91,7 @@ INT D3D::CreateSwapChain(HWND hWnd, UINT width, UINT height, BOOL windowed, DXGI
 	HRESULT hr = D3D11CreateDeviceAndSwapChain
 	(
 		nullptr, driverType, nullptr, 0,
-		featureLevels, std::size(featureLevels),
+		featureLevels, (UINT)std::size(featureLevels),
 		D3D11_SDK_VERSION, &swapChainDescription,
 		&pSwapChain, &pD3DDevice,
 		&usedFeatureLevel, &pD3DDeviceContext
@@ -138,19 +140,40 @@ INT D3D::CreateRasterizerState()
 	return 0;
 }
 
+INT D3D::CreateBlendState()
+{
+	D3D11_BLEND_DESC blendDesc = {};
+	D3D11_RENDER_TARGET_BLEND_DESC targetBlendDesc;
+	targetBlendDesc.BlendEnable = true;
+	targetBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	targetBlendDesc.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	targetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
+	targetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+	targetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+	targetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	targetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	blendDesc.RenderTarget[0] = targetBlendDesc;
+
+	HRESULT hr = pD3DDevice->CreateBlendState(&blendDesc, &pBlendState);
+	if (FAILED(hr)) return 106;
+
+	return 0;
+}
+
 INT D3D::CreateInputLayout()
 {
 	ID3DBlob* pCompiledShaderCode = nullptr;
-	HRESULT hr = D3DReadFileToBlob(TEXT("BaseVertexShader.cso"), &pCompiledShaderCode);
+	HRESULT hr = D3DReadFileToBlob(TEXT("Shaders\\BaseVertexShader.cso"), &pCompiledShaderCode);
 	if (FAILED(hr)) return 23;
 	D3D11_INPUT_ELEMENT_DESC elementDescription[5] = {};
 	elementDescription[0].SemanticName = "POSITION";
 	elementDescription[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	elementDescription[1].SemanticName = "NORMAL";
-	elementDescription[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	elementDescription[1].SemanticName = "TEXCOORD";
+	elementDescription[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	elementDescription[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	elementDescription[2].SemanticName = "TEXCOORD";
-	elementDescription[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+	elementDescription[2].SemanticName = "NORMAL";
+	elementDescription[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	elementDescription[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	elementDescription[3].SemanticName = "TANGENT";
 	elementDescription[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -161,7 +184,7 @@ INT D3D::CreateInputLayout()
 	hr = pD3DDevice->CreateInputLayout
 	(
 		elementDescription,
-		std::size(elementDescription),
+		(UINT)std::size(elementDescription),
 		pCompiledShaderCode->GetBufferPointer(),
 		pCompiledShaderCode->GetBufferSize(),
 		&pInputLayout

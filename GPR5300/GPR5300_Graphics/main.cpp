@@ -7,21 +7,24 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmd, int nCmdShow)
 {
-	BOOL windowed = true;
+	int numArgs = 0;
+	LPWSTR* args = CommandLineToArgvW(GetCommandLineW(), &numArgs);
+	BOOL windowed = ((args[1] != nullptr) && (*args[1] == *L"-w")) ? true : false; //commandline windowed
+
 	UINT width = windowed ? 1080 : GetSystemMetrics(SM_CXSCREEN);
 	UINT height = windowed ? 720 : GetSystemMetrics(SM_CYSCREEN);
 
 	Window window = {};	
 	INT error = window.Init(hInstance, width, height, windowed);
-	if (error != 0) return error;
+	if (error) return error;
 
 	D3D d3d = {};
 	error = d3d.Init(window.GetWindowHandle(), width, height, windowed);
-	if (error != 0) return error;
+	if (error) return error;
 
 	Scene scene = {};
 	error = scene.Init(d3d.GetDevice(), d3d.GetDeviceContext(), d3d.GetDepthStencilView(), width, height);
-	if (error != 0) return error;
+	if (error) return error;
 
 	while (window.Run())
 	{

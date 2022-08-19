@@ -14,9 +14,10 @@ void Mover::Update()
 		pTransform->position += movement * deltaTime;
 	else
 	{
-		pTransform->position += pTransform->Right() * (movement.x * deltaTime);
-		pTransform->position += pTransform->Up() * (movement.y * deltaTime);
-		pTransform->position += pTransform->Forward() * (movement.z * deltaTime);
+		pTransform->position += 
+			pTransform->Right()* (movement.x * deltaTime) + 
+			pTransform->Up() * (movement.y * deltaTime) + 
+			pTransform->Forward() * (movement.z * deltaTime);
 	}
 }
 

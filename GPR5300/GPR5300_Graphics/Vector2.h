@@ -12,7 +12,10 @@ public:
 
 	Vector2() { x = 0.0f, y = 0.0f; }
 	Vector2(FLOAT x, FLOAT y) { this->x = x, this->y = y; }
+
+	//Converts the Vector to XMFLOAT2
 	XMFLOAT2 ToXMFloat() { return XMFLOAT2(x, y); }
+	//Converts the Vector to XMVECTOR
 	XMVECTOR ToXMVector() { return XMVectorSet(x, y, 0.0f, 0.0f); }
 
 	Vector2 operator *(FLOAT right);

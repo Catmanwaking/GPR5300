@@ -17,11 +17,14 @@ struct PointLightData
 class PointLight : public Component, public IUpdateable
 {
 public:
+	//Initializes the PointLight with the given data values.
 	INT Init(PointLightData lightData);
+	//Updates the position of the PointLight.
 	virtual void Update();
 	virtual void DeInit();
 
-	PointLightData GetBuffer() { return data; }
+	//Returns the PointLight Ddta.
+	PointLightData GetData() { return data; }
 private:
 	PointLightData data = {};
 };

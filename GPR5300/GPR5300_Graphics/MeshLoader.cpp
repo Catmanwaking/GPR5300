@@ -28,7 +28,7 @@ void MeshLoader::ParseLine(string line)
 	else if (line.substr(0, 2) == "vt") ParseTextureCoordinate(line);
 	else if (line.substr(0, 2) == "vn") ParseVertexNormal(line);
 	else if (line.substr(0, 2) == "f ") ParseFace(line);
-	else if (line.substr(0, 6) == "mtllib") ParseMaterial(line);
+	else if (line.substr(0, 6) == "mtllib")  ParseMaterial(line);
 }
 
 void MeshLoader::ParseMaterial(string line)
@@ -59,7 +59,7 @@ void MeshLoader::ParseTextureCoordinate(string line)
 	istringstream s(line);
 	s >> prefix >> u >> v;
 
-	data->textureCoordinates->push_back(XMFLOAT2(u, v));
+	data->textureCoordinates->push_back(XMFLOAT2(u, 1.0f - v)); //why do blender objects write texcoords from the bottom left?
 }
 
 void MeshLoader::ParseVertexNormal(string line)

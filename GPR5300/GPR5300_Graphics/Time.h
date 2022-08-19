@@ -14,10 +14,12 @@ class Time : public IUpdateable
 public:
 	static Time* GetInstance();
 
+	//Initializes the Time object
 	INT Init();
 	virtual void Update();
 	void DeInit();
 
+	//Returns the time between the last two Update calls.
 	FLOAT const GetDeltaTime() { return deltaTime; }
 
 private:

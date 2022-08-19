@@ -4,21 +4,20 @@
 #include "GameObject.h"
 #include "IRenderable.h"
 #include "Material.h"
-#include "WaterMaterial.h"
 #include "MeshLoaderData.h"
-#include "Shaders.h"
 #include "MeshGenerator.h"
 
 using namespace DirectX;
-using namespace Shaders;
 
 class Mesh : public Component, public IRenderable
 {
 public:
 	virtual INT Init(ID3D11Device* pD3DDevice, std::string fileName, Shader shader);
-	virtual INT Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader);
+	virtual INT Init(ID3D11Device* pD3DDevice, Shape shape, Shader shader);
 	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& viewProjectionMatrix);
 	virtual void DeInit();
+
+	Material* GetMaterial() { return &material; }
 
 protected:
 	INT InitVertexBuffer(ID3D11Device* pD3DDevice);
@@ -36,6 +35,6 @@ protected:
 	MeshLoaderData* pMeshData = nullptr;
 
 private:
-	Material* material = {};
+	Material material = {};
 };
 

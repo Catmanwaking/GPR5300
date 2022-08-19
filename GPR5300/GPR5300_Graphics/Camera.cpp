@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-INT Camera::Init(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT screenWidth, UINT screenHeight, std::string skyBoxName, Shader shader)
+INT Camera::Init(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT screenWidth, UINT screenHeight)
 {
     INT error = 0;
     InitCameraBuffer(pD3DDevice);
@@ -17,7 +17,7 @@ INT Camera::Init(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencil
 
     this->pDepthStencilView = pDepthStencilView;
 
-    skyBox.Init(pD3DDevice, skyBoxName, shader);
+    skyBox.Init(pD3DDevice);
 
     return 0;
 }
@@ -44,7 +44,7 @@ void Camera::Render(ID3D11DeviceContext* pD3DDeviceContext)
     //render skybox and clear depth buffer
     viewMatrix = XMMatrixLookToLH(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), forward, up);
     skyBox.Render(pD3DDeviceContext, viewMatrix * projectionMatrix);
-    pD3DDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0xffffffff);
+    pD3DDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0xff);
 
     viewMatrix = XMMatrixLookToLH(pTransform->GetPosition().ToXMVector(),forward,up);
     viewProjectionMatrix = viewMatrix * projectionMatrix;
@@ -69,5 +69,5 @@ void Camera::SetCameraBuffer(ID3D11DeviceContext* pD3DDeviceContext)
 
     pD3DDeviceContext->Unmap(pCameraBuffer, 0);
 
-    pD3DDeviceContext->VSSetConstantBuffers(1, 1, &pCameraBuffer);
+    pD3DDeviceContext->PSSetConstantBuffers(2, 1, &pCameraBuffer);
 }

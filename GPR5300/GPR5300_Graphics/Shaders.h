@@ -2,7 +2,7 @@
 
 namespace Shaders
 {
-	enum Shader
+	enum class Shader : int
 	{
 		Matte = 0,
 		Glossy,
@@ -13,19 +13,19 @@ namespace Shaders
 
 	const LPCWSTR vertexShaders[5] =
 	{
-		TEXT("MatteVertexShader.cso"),
-		TEXT("GlossyVertexShader.cso"),
-		TEXT("NormalMapVertexShader.cso"),
-		TEXT("WaterVertexShader.cso"),
-		TEXT("SkyboxVertexShader.cso")
+		TEXT("Shaders\\MatteVertexShader.cso"),
+		TEXT("Shaders\\GlossyVertexShader.cso"),
+		TEXT("Shaders\\NormalMapVertexShader.cso"),
+		TEXT("Shaders\\WaterVertexShader.cso"),
+		TEXT("Shaders\\SkyboxVertexShader.cso")
 	};
 
 	const LPCWSTR pixelShaders[5] =
 	{
-		TEXT("MattePixelShader.cso"),
-		TEXT("GlossyPixelShader.cso"),
-		TEXT("NormalMapPixelShader.cso"),
-		TEXT("WaterPixelShader.cso"),
-		TEXT("SkyboxPixelShader.cso")
+		TEXT("Shaders\\MattePixelShader.cso"),
+		TEXT("Shaders\\GlossyPixelShader.cso"),
+		TEXT("Shaders\\NormalMapPixelShader.cso"),
+		TEXT("Shaders\\WaterPixelShader.cso"),
+		TEXT("Shaders\\SkyboxPixelShader.cso")
 	};
 }

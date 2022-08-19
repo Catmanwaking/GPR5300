@@ -38,30 +38,28 @@ cbuffer MaterialData
 struct PixelInput
 {
     float4 position : SV_POSITION;
-    float3 normal : NORMAL0;
     float2 uv : TEXCOORD;
+    float3 normal : NORMAL;
     float3 worldPos : POSITION;
 };
 
 float4 main(PixelInput INPUT) : SV_TARGET
 {
+    float3 textureColor = MainTexture.Sample(MainSampler, INPUT.uv).rgb;
     float3 normal = normalize(INPUT.normal);
-    float3 textureColor = MainTexture.Sample(MainSampler, INPUT.uv);
-    float3 light = ambientLight;
+    float3 light = ambientLight.rgb;
 
+    //light
     //directional
     //diffuse
     float lightIntensity = max(dot(normal, -dirLight.direction), 0.0f);
-    light += (dirLight.color * lightIntensity * dirLight.intensity);
-    //specular
+    light += (dirLight.color.rgb * lightIntensity * dirLight.intensity);
     
+    //point
     for (uint i = 0; i < pointLightCount; i++)
     {
         PointLightData pLight = pointLights[i];
         
-        //diffuse
-        float3 lightDir = normalize(pLight.position - INPUT.worldPos);
-        float lightIntensity = max(dot(normal, lightDir), 0.0f);
         //attenuation
         float lightDistance = distance(INPUT.worldPos, pointLights[i].position);
         float attenuationFactor = 1.0f / (
@@ -69,9 +67,12 @@ float4 main(PixelInput INPUT) : SV_TARGET
             pLight.linearAttenuation * lightDistance +
             pLight.quadraticAttenuation * lightDistance * lightDistance
         );
+        //diffuse
+        float3 lightDir = normalize(pLight.position - INPUT.worldPos);
+        float lightIntensity = max(dot(normal, lightDir), 0.0f);
         lightIntensity *= attenuationFactor;
         lightIntensity = (lightDistance > pLight.maxDist) ? 0.0f : lightIntensity;
-        light += saturate(lightIntensity * pLight.intensity * pLight.color);
+        light += saturate(lightIntensity * pLight.intensity * pLight.color.rgb);
     }
     
     //texture   

@@ -55,7 +55,7 @@ void Quaternion::RotateAround(Vector3 axis, FLOAT angle)
     rotation.x = axis.x * factor;
     rotation.y = axis.y * factor;
     rotation.z = axis.z * factor;
-    rotation.w = cos(angle * 0.5f);
+    rotation.w = cosf(angle * 0.5f);
 
     (*this) = rotation.Normalized() * (*this);
     Normalize();
@@ -102,4 +102,18 @@ Vector3 Quaternion::operator*(const Vector3 v)
     Quaternion vector = { 0.0f, v.x, v.y, v.z };
     Quaternion eq = (*this) * vector * Conjugation();
     return Vector3(eq.x, eq.y, eq.z);
+}
+
+Quaternion Quaternion::LookTo(Vector3 lookDir)
+{ 
+    return FromToRotation(Vector3::Forward(), lookDir);
+}
+
+Quaternion Quaternion::FromToRotation(Vector3 v1, Vector3 v2)
+{
+    Vector3 cross = Vector3::Cross(v1, v2);
+    Quaternion rotation = { 0.0f, cross.x, cross.y, cross.z };
+    rotation.w = sqrtf(v1.LengthSqr() * v2.LengthSqr()) + (v1 * v2);
+    rotation.Normalize();
+    return rotation;
 }

@@ -39,7 +39,6 @@ void Material::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rT
 	pD3DDeviceContext->PSSetShaderResources(0, 1, &pTexture);
 	if(pNormalMap != nullptr)
 		pD3DDeviceContext->PSSetShaderResources(1, 1, &pNormalMap);
-
 	pD3DDeviceContext->PSSetSamplers(0, 1, &pSamplerState);
 }
 
@@ -60,8 +59,8 @@ INT Material::InitVertexShader(ID3D11Device* pD3DDevice, Shader shader)
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	LPCWSTR path = vertexShaders[shader];
-	hr = D3DReadFileToBlob(vertexShaders[shader], &pCompiledShaderCode);
+	LPCWSTR path = vertexShaders[(int)shader];
+	hr = D3DReadFileToBlob(vertexShaders[(int)shader], &pCompiledShaderCode);
 	if (FAILED(hr)) return 50;
 
 	hr = pD3DDevice->CreateVertexShader
@@ -83,7 +82,7 @@ INT Material::InitPixelShader(ID3D11Device* pD3DDevice, Shader shader)
 	ID3DBlob* pCompiledShaderCode = nullptr;
 	HRESULT hr = {};
 
-	hr = D3DReadFileToBlob(pixelShaders[shader], &pCompiledShaderCode);
+	hr = D3DReadFileToBlob(pixelShaders[(int)shader], &pCompiledShaderCode);
 	if (FAILED(hr)) return 54;
 
 	hr = pD3DDevice->CreatePixelShader
@@ -202,16 +201,22 @@ void Material::SetAdditionalBuffers(ID3D11DeviceContext* pD3DDeviceContext)
 	HRESULT hr = pD3DDeviceContext->Map(pVSAdditionalBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	if (FAILED(hr)) return;
 	AdditionalData* additionalData = static_cast<AdditionalData*>(data.pData);
-	additionalData = pVSData;
+	additionalData->data1 = pVSData.data1;
+	additionalData->data2 = pVSData.data2;
+	additionalData->data3 = pVSData.data3;
+	additionalData->data4 = pVSData.data4;
 	pD3DDeviceContext->Unmap(pVSAdditionalBuffer, 0);
 
 	data = {};
 	hr = pD3DDeviceContext->Map(pPSAdditionalBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	if (FAILED(hr)) return;
-	AdditionalData* additionalData = static_cast<AdditionalData*>(data.pData);
-	additionalData = pPSData;
+	additionalData = static_cast<AdditionalData*>(data.pData);
+	additionalData->data1 = pPSData.data1;
+	additionalData->data2 = pPSData.data2;
+	additionalData->data3 = pPSData.data3;
+	additionalData->data4 = pPSData.data4;
 	pD3DDeviceContext->Unmap(pPSAdditionalBuffer, 0);
 
-	pD3DDeviceContext->VSSetConstantBuffers(2, 1, &pVSAdditionalBuffer);
-	pD3DDeviceContext->PSSetConstantBuffers(2, 1, &pVSAdditionalBuffer);
+	pD3DDeviceContext->VSSetConstantBuffers(1, 1, &pVSAdditionalBuffer);
+	pD3DDeviceContext->PSSetConstantBuffers(3, 1, &pPSAdditionalBuffer);
 }

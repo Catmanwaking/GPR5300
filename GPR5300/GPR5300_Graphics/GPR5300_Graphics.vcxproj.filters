@@ -58,6 +58,15 @@
     <Filter Include="Header Files\Materials">
       <UniqueIdentifier>{0bf3509a-c037-4759-98af-00a7406f956d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Materials\AdditionalDataFillers">
+      <UniqueIdentifier>{490ae967-a332-4ce3-ac7a-54b728587e0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Materials\AdditionalDataFillers">
+      <UniqueIdentifier>{37d216ee-4460-443a-be62-b5f2d868dcf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{d79b86e2-0141-408d-87c9-e98ccc7cb6da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IUpdateable.h">
@@ -132,9 +141,6 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="WaterMaterial.cpp">
-      <Filter>Source Files\Materials</Filter>
-    </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -149,6 +155,15 @@
     </ClCompile>
     <ClCompile Include="MeshGenerator.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterDataFiller.cpp">
+      <Filter>Source Files\Materials\AdditionalDataFillers</Filter>
+    </ClCompile>
+    <ClCompile Include="AdditionalDataFiller.cpp">
+      <Filter>Source Files\Materials\AdditionalDataFillers</Filter>
+    </ClCompile>
+    <ClCompile Include="SinWaveMover.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,9 +203,6 @@
     <ClInclude Include="Vector3.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Space.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Rotator.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -221,9 +233,6 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Shaders.h">
-      <Filter>Header Files\Materials</Filter>
-    </ClInclude>
     <ClInclude Include="SkyBoxMaterial.h">
       <Filter>Header Files\Materials</Filter>
     </ClInclude>
@@ -232,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterMaterial.h">
-      <Filter>Header Files\Materials</Filter>
     </ClInclude>
     <ClInclude Include="DirectionalLight.h">
       <Filter>Header Files\Components</Filter>
@@ -253,6 +259,24 @@
     </ClInclude>
     <ClInclude Include="MeshGenerator.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AdditionalDataFiller.h">
+      <Filter>Header Files\Materials\AdditionalDataFillers</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterDataFiller.h">
+      <Filter>Header Files\Materials\AdditionalDataFillers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="SinWaveMover.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,10 +8,9 @@
 #include "Camera.h"
 #include "Time.h"
 #include "Light.h"
-#include "Shaders.h"
 #include "MeshGenerator.h"
-
-using namespace Shaders;
+#include "AdditionalDataFiller.h"
+#include "Space.h"
 
 class Scene
 {
@@ -35,12 +34,14 @@ private:
 	INT AddLights(ID3D11Device* pD3DDevice);
 	INT AddMeshes(ID3D11Device* pD3DDevice);
 
-	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height, std::string skyBoxName);
-	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path, Shader shader);
-	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader);
-	INT AddMover(GameObject* go, Vector3 movement);
-	INT AddRotator(GameObject* go, Vector3 rotation);
+	INT AddCamera(GameObject* go, ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT width, UINT height);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, std::string path, Shader shader, AdditionalDataFiller* pFiller);
+	INT AddMesh(GameObject* go, ID3D11Device* pD3DDevice, Shape shape, Shader shader);
+	INT AddMover(GameObject* go, Vector3 movement, Space space);
+	INT AddSinWaveMover(GameObject* go, Vector3 movement, Vector3 anchor, FLOAT speed, Space space);
+	INT AddRotator(GameObject* go, Vector3 rotation, Space space);
 	INT AddPlayerController(GameObject* go);
 	INT AddDirectionalLight(GameObject* go, DirLightData data);
 	INT AddPointLight(GameObject* go, PointLightData data);
+	INT AddAdditionalDataFiller(GameObject* go, AdditionalDataFiller* pFiller);
 };

@@ -13,11 +13,14 @@ struct DirLightData
 class DirectionalLight : public Component, public IUpdateable
 {
 public:
+	//Initializes the DirectionalLight with the given data values.
 	INT Init(DirLightData lightData);
+	//Updates the rotation of the DirectionalLight.
 	virtual void Update();
 	virtual void DeInit();
 
-	DirLightData GetBuffer() { return data; }
+	//Returns the DirectionalLight data.
+	DirLightData GetData() { return data; }
 
 private:
 	DirLightData data = {};

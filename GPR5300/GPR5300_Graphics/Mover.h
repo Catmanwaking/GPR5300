@@ -9,9 +9,13 @@
 class Mover : public Component, public IUpdateable
 {
 public:
+	//Initializes the Mover Component.
 	INT Init(Vector3 movement);
+	//Updates the position of the GameObject.
 	virtual void Update();
 	virtual void DeInit();
+
+	//Sets the movement space.
 	void SetSpace(Space relativeTo);
 
 private:

@@ -19,13 +19,15 @@ struct CameraData
 class Camera : public Component, public IRenderable
 {
 public:
-	INT Init(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT screenWidth, UINT screenHeight, std::string skyBoxName, Shader shader);
+	//Initializes the Camera component.
+	INT Init(ID3D11Device* pD3DDevice, ID3D11DepthStencilView* pDepthStencilView, UINT screenWidth, UINT screenHeight);
+	//Initializes the Camera buffer.
 	INT InitCameraBuffer(ID3D11Device* pD3DDevice);
+	//Renders the SkyBox and calculates the ViewProjectionMatrix.
 	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext);
 	virtual void DeInit();
-	//const XMMATRIX& GetViewMatrix() const { return viewMatrix; }
-	//const XMMATRIX& GetProjectionMatrix() const { return projectionMatrix; }
 
+	//Returns the ViewProjectionMatrix.
 	const XMMATRIX& GetViewProjectionMatrix() const { return viewProjectionMatrix; }
 
 private:
@@ -38,6 +40,7 @@ private:
 
 	ID3D11DepthStencilView* pDepthStencilView = nullptr;
 
+	//Sets the Camera buffer.
 	void SetCameraBuffer(ID3D11DeviceContext* pD3DDeviceContext);
 };
 

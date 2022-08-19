@@ -1,9 +1,14 @@
+texture2D MainTexture;
+texture2D NormalTexture;
+sampler MainSampler;
+
 struct PixelInput
 {
     float4 position : SV_POSITION;
-    float3 normal : NORMAL;
     float2 uv : TEXCOORD;
-    float4 color : COLOR;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float3 binormal : BINORMAL;
 };
 
 float4 main(PixelInput INPUT) : SV_TARGET

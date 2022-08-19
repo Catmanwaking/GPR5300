@@ -5,7 +5,7 @@
 
 using namespace Constants;
 
-INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
+INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shaders::Shader shader)
 {
 	pMeshData = MeshLoader::LoadFromFile(path);
 
@@ -15,7 +15,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	error = material->Init(pD3DDevice, pMeshData->materialFileName, shader);
+	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
 	if (error) return error;
 
 	pMeshData->DeInit();
@@ -24,7 +24,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, std::string path, Shader shader)
 	return 0;
 }
 
-INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shader)
+INT Mesh::Init(ID3D11Device* pD3DDevice, Shape shape, Shaders::Shader shader)
 {
 	pMeshData = MeshGenerator::GenerateShape(shape);
 
@@ -34,8 +34,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shad
 	error = InitIndexBuffer(pD3DDevice);
 	if (error) return error;
 
-	material = new Material;
-	error = material->Init(pD3DDevice, pMeshData->materialFileName, shader);
+	error = material.Init(pD3DDevice, pMeshData->materialFileName, shader);
 	if (error) return error;
 
 	pMeshData->DeInit();
@@ -46,7 +45,7 @@ INT Mesh::Init(ID3D11Device* pD3DDevice, MeshGenerator::Shape shape, Shader shad
 
 void Mesh::Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rViewProjectionMatrix)
 {
-	material->Render(pD3DDeviceContext, pTransform->GetTransformationMatrix(), rViewProjectionMatrix);
+	material.Render(pD3DDeviceContext, pTransform->GetTransformationMatrix(), rViewProjectionMatrix);
 
 	static UINT offset = 0;
 	pD3DDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &vertexStride, &offset);
@@ -63,7 +62,7 @@ void Mesh::DeInit()
 
 INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 {
-	vertexCount = pMeshData->vertices->size();
+	vertexCount = (USHORT)pMeshData->vertices->size();
 	vertexStride = sizeof(Vertex);
 
 	D3D11_BUFFER_DESC bufferDesc = {};
@@ -82,7 +81,7 @@ INT Mesh::InitVertexBuffer(ID3D11Device* pD3DDevice)
 
 INT Mesh::InitIndexBuffer(ID3D11Device* pD3DDevice)
 {
-	indexCount = pMeshData->indices->size();
+	indexCount = (UINT)pMeshData->indices->size();
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.ByteWidth = indexCount * sizeof(USHORT);

@@ -7,6 +7,7 @@ class GameObject
 {
 public:
 	void DeInit();
+	//Adds a component to the GameObject.
 	void AddComponent(Component* c);
 
 	Transform transform {};

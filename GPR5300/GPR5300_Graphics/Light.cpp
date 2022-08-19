@@ -25,10 +25,10 @@ void Light::Render(ID3D11DeviceContext* pD3DDeviceContext)
 
     LightData* lightBuffer = static_cast<LightData*>(data.pData);
 
-    lightBuffer->dirLightBuffer = pDirLight->GetBuffer();
+    lightBuffer->dirLightBuffer = pDirLight->GetData();
     for (UINT i = 0; i < pointLightCount; i++)
     {
-        lightBuffer->pointLight[i] = pPointLights[i]->GetBuffer();
+        lightBuffer->pointLight[i] = pPointLights[i]->GetData();
     }
     lightBuffer->ambientLight = ambientLight;
     lightBuffer->pointLightCount = pointLightCount;
@@ -50,6 +50,7 @@ void Light::AddLight(DirectionalLight* pDirLight)
 
 void Light::AddLight(PointLight* pPointLight)
 {
+    if (pointLightCount >= 8) return;
     this->pPointLights[pointLightCount] = pPointLight;
     pointLightCount++;
 }

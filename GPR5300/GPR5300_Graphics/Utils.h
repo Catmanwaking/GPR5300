@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 
+//Safely releases DirectX related data.
 template <typename T>
 inline void SafeRelease(T*& obj)
 {
@@ -11,6 +12,7 @@ inline void SafeRelease(T*& obj)
 	}
 }
 
+//Clears and Deletes a std::vector collection.
 template <typename T>
 inline void SafeClearAndDelete(T*& obj)
 {

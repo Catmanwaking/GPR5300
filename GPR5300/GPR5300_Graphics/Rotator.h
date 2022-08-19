@@ -9,9 +9,13 @@
 class Rotator : public Component, public IUpdateable
 {
 public:
+	//Initializes the Rotator component.
 	INT Init(Vector3 rotation);
+	//Updates the GameObjects rotation.
 	virtual void Update();
 	virtual void DeInit();
+
+	//Sets the rotation space.
 	void SetSpace(Space relativeTo);
 
 private:

@@ -10,11 +10,11 @@ MeshLoaderData* MeshGenerator::GenerateShape(Shape shape)
 {
     switch (shape)
     {
-    case Tetrahedron:
+    case Shape::Tetrahedron:
         return nullptr;
-    case Icosahedron:
-        return GenerateIcosahedron();
-    case IcoSpehre:
+    case Shape::Icosahedron:
+        return GenerateIcoSpehre(0); //Icosphere calculates normals
+    case Shape::IcoSpehre:
         return GenerateIcoSpehre(3);
     default:
         return nullptr;
@@ -29,6 +29,7 @@ MeshLoaderData* MeshGenerator::GenerateIcosahedron()
     float a = 1.0f;
     float b = 1.0f / goldenRatio;
 
+    //Hardcoded icosahedron data
     pData->vertices->push_back(Vertex(0, b, -a));
     pData->vertices->push_back(Vertex(b, a, 0));
     pData->vertices->push_back(Vertex(-b, a, 0));
@@ -71,8 +72,8 @@ MeshLoaderData* MeshGenerator::GenerateIcoSpehre(int subdivisions)
     MeshLoaderData* pMeshData = GenerateIcosahedron();
     for (int i = 0; i < subdivisions; i++)
         SubdivideMesh(pMeshData);
-    int vCount = pMeshData->vertices->size();
-    for (int i = 0; i < vCount; i++)
+    USHORT vCount = (USHORT)pMeshData->vertices->size();
+    for (USHORT i = 0; i < vCount; i++)
     {
         Vector3 toNormalize = Vector3(pMeshData->vertices->at(i).pos);
         toNormalize.Normalize();
@@ -88,12 +89,12 @@ void MeshGenerator::SubdivideMesh(MeshLoaderData* pMeshLoaderData)
 
     std::vector<USHORT>* indices = new std::vector<USHORT>;
 
-    int indexCount = pMeshLoaderData->indices->size();
-    for (int i = 0; i < indexCount; i += 3)
+    UINT indexCount = (UINT)pMeshLoaderData->indices->size();
+    for (UINT i = 0; i < indexCount; i += 3u)
     {
-        USHORT i1 = pMeshLoaderData->indices->at(i + 0);
-        USHORT i2 = pMeshLoaderData->indices->at(i + 1);
-        USHORT i3 = pMeshLoaderData->indices->at(i + 2);
+        USHORT i1 = pMeshLoaderData->indices->at(i + 0u);
+        USHORT i2 = pMeshLoaderData->indices->at(i + 1u);
+        USHORT i3 = pMeshLoaderData->indices->at(i + 2u);
 
         USHORT a = GetNewVertex(pMeshLoaderData, i1, i2);
         USHORT b = GetNewVertex(pMeshLoaderData, i2, i3);
@@ -120,7 +121,7 @@ USHORT MeshGenerator::GetNewVertex(MeshLoaderData* pMeshLoaderData, USHORT i1, U
     if (newVertices.find(key) != newVertices.end())
         return newVertices[key];
 
-    USHORT newIndex = pMeshLoaderData->vertices->size();
+    USHORT newIndex = (USHORT)pMeshLoaderData->vertices->size();
     newVertices[key] = newIndex;
 
     Vertex newVertex = {};

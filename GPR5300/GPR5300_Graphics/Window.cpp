@@ -8,7 +8,6 @@ INT Window::Init(HINSTANCE hInstance, UINT width, UINT height, BOOL windowed)
 	DWORD style = WS_OVERLAPPEDWINDOW;
 	UINT screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	UINT screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
 	POINT pos = { (screenWidth - width) >> 1, (screenHeight - height) >> 1 };
 	RECT wr = { pos.x, pos.y, pos.x + width, pos.y + height };
 	if(windowed) AdjustWindowRect(&wr, style, false);
@@ -45,6 +44,7 @@ INT Window::Init(HINSTANCE hInstance, UINT width, UINT height, BOOL windowed)
 	return 0;
 }
 
+// Handles WindowMessages until WM_QUIT is sent.
 BOOL Window::Run()
 {
 	static MSG msg = {};

@@ -18,8 +18,8 @@ public:
 	std::vector<XMFLOAT2>* textureCoordinates = {};
 
 	std::vector<USHORT>* vertexIndices = {};
-	std::vector<USHORT>* normalIndices = {};
 	std::vector<USHORT>* uvIndices = {};
+	std::vector<USHORT>* normalIndices = {};
 
 	std::string materialFileName = {};
 

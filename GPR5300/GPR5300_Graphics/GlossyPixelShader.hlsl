@@ -35,57 +35,65 @@ cbuffer MaterialData
     float2 padding1;
 };
 
+cbuffer CameraData
+{
+    float3 camPos;
+    float padding2;
+};
+
 struct PixelInput
 {
     float4 position : SV_POSITION;
-    float3 normal : NORMAL0;
     float2 uv : TEXCOORD;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float3 binormal : BINORMAL;
     float3 worldPos : POSITION;
-    float3 viewDir : NORMAL1;
 };
 
 float4 main(PixelInput INPUT) : SV_TARGET
-{   
+{    
     float3 normal = normalize(INPUT.normal);
-    float3 textureColor = MainTexture.Sample(MainSampler, INPUT.uv);
-    float3 light = ambientLight;
+    float3 viewDir = normalize(camPos - INPUT.worldPos);
+    float3 textureColor = MainTexture.Sample(MainSampler, INPUT.uv).rgb;
+    float3 light = ambientLight.rgb;
     float3 specular;
 
+    //light
     //directional
     //diffuse
     float lightIntensity = max(dot(normal, -dirLight.direction), 0.0f);
-    light += (dirLight.color * lightIntensity * dirLight.intensity);
+    light += (dirLight.color.rgb * lightIntensity * dirLight.intensity);
     //specular
-    float3 halfDir = normalize((-dirLight.direction) + INPUT.viewDir);
+    float3 halfDir = normalize((-dirLight.direction) + viewDir);
     specular = pow(max(dot(normal, halfDir), 0.0f), specularPower * dirLight.intensity);
     
     for (uint i = 0; i < pointLightCount; i++)
     {
         PointLightData pLight = pointLights[i];
         
-        //diffuse
-        float3 lightDir = normalize(pLight.position - INPUT.worldPos);
-        float lightIntensity = max(dot(normal, lightDir), 0.0f);
         //attenuation
-        float lightDistance = distance(INPUT.worldPos, pointLights[i].position);
+        float lightDistance = distance(INPUT.worldPos, pLight.position);
         float attenuationFactor = 1.0f / (
             pLight.constantAttenuation +
             pLight.linearAttenuation * lightDistance +
             pLight.quadraticAttenuation * lightDistance * lightDistance
         );
+        //diffuse
+        float3 lightDir = normalize(pLight.position - INPUT.worldPos);
+        float lightIntensity = max(dot(normal, lightDir), 0.0f);
         lightIntensity *= attenuationFactor;
         lightIntensity = (lightDistance > pLight.maxDist) ? 0.0f : lightIntensity;
-        light += saturate(lightIntensity * pLight.intensity * pLight.color);
+        light += saturate(lightIntensity * pLight.intensity * pLight.color.rgb);
         
         //specular
-        float3 halfDir = normalize((lightDir) + INPUT.viewDir);
-        specular += pow(max(dot(normal, halfDir), 0.0f), specularPower * pLight.intensity);
+        float3 halfDir = normalize((lightDir) + viewDir);
+        specular += pow(max(dot(normal, halfDir), 0.0f), specularPower * pLight.intensity) * lightIntensity;
     }
     
     //texture   
     float3 color = textureColor * saturate(light);   
-    
+       
     color = saturate(color + specular);   
-    
     return float4(color, dissolve);
 }

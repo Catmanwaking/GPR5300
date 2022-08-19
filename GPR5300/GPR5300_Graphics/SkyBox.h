@@ -11,7 +11,9 @@ using namespace DirectX;
 class SkyBox : public Mesh
 {
 public:
-	virtual INT Init(ID3D11Device* pD3DDevice, std::string fileName, Shader shader);
+	//Initializes the SkyBox
+	virtual INT Init(ID3D11Device* pD3DDevice);
+	//Renders the SkyBox
 	virtual void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& viewProjectionMatrix);
 	virtual void DeInit();
 

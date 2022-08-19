@@ -31,16 +31,29 @@ struct AdditionalData
 class Material
 {
 public:
+	//Initializes the Material alongside all buffers and shaders required for rendering.
 	INT Init(ID3D11Device* pD3DDevice, std::string materialName, Shader shader);
+	//Sets the required buffers and shaders for rendering
 	void Render(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
 	void DeInit();
 
+	//Gets the pointer to the additional vertex shader buffer.
+	AdditionalData* GetVSData() { return &pVSData; }
+	//Gets the pointer to the additional pixel shader buffer.
+	AdditionalData* GetPSData() { return &pPSData; }
+
 protected:
+	//Initializes the vertex shader.
 	INT InitVertexShader(ID3D11Device* pD3DDevice, Shader shader);
+	//Initializes the pixel shader.
 	INT InitPixelShader(ID3D11Device* pD3DDevice, Shader shader);
+	//Initializes the matrix buffer.
 	INT InitMatrixBuffer(ID3D11Device* pD3DDevice);
+	//Initializes the material buffer.
 	INT InitMaterialBuffer(ID3D11Device* pD3DDevice, MaterialLoaderData* pMaterialData);
+	//Initializes the texture shader resour.
 	INT InitTextureAndSamplerState(ID3D11Device* pD3DDevice, std::string materialName);
+	//Initializes the additional buffers.
 	INT InitAdditionalBuffers(ID3D11Device* pD3DDevice);
 
 	void SetMatrixBuffer(ID3D11DeviceContext* pD3DDeviceContext, const XMMATRIX& rTransformationMatrix, const XMMATRIX& rViewProjectionMatrix);
@@ -57,6 +70,6 @@ protected:
 	ID3D11ShaderResourceView* pNormalMap = nullptr;
 	ID3D11SamplerState* pSamplerState = nullptr;
 
-	AdditionalData* pVSData = nullptr;
-	AdditionalData* pPSData = nullptr;
+	AdditionalData pVSData = {};
+	AdditionalData pPSData = {};
 };
